@@ -19,7 +19,7 @@ function App() {
     let parsedItem = JSON.parse(localItem)
     
     if(parsedItem){
-      setWeatherResults(parsedItem)
+      setWeatherResults({parsedItem, name})
       return parsedItem
     } else {
       return false
