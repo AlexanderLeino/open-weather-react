@@ -18,12 +18,14 @@ export const NavBar = ({setCityName, getGeoCoordinates}) => {
     <Flex backgroundColor={'grey'} width='100%' alignItems='center' justifyContent='space-between' >
       <Title>Forecast</Title>
       <Flex alignItems='center'>
-        <Input 
-            setCityName={setCityName}
-            placeholder='City Name'
-            label='City Name'
-        />
-        <Button iconBefore={<VscSearch />} onClick={getGeoCoordinates}/>
+        <form onSubmit={getGeoCoordinates}>
+          <Input 
+              setCityName={setCityName}
+              placeholder='City Name'
+              label='City Name'
+          />
+        </form>
+        <Button iconBefore={<VscSearch />} onClick={getGeoCoordinates} marginTop='-13px'/>
       </Flex>
     </Flex>
   )

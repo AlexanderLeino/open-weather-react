@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { darken } from "polished";
+import { darken, margin } from "polished";
 
 const StyledButton = styled.button`
   display: flex;
@@ -28,7 +28,7 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom : null)};
   border-bottom: ${({ borderBottom }) => (borderBottom ? borderBottom : null)};
-  margin-top: 13px;
+  margin-top: ${({marginTop}) => marginTop ? marginTop : 0};
   background-color: #ff4800;
   &:hover {
     color: ${({ hoverColor }) => hoverColor || "white"};

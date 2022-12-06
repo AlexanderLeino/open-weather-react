@@ -1,35 +1,44 @@
-import { useEffect, useState, createContext } from 'react';
+import { useState, useEffect } from 'react';
 import { NavBar } from './components/navbar';
 import { CurrentWeatherCard } from './components/currentWeather';
 import { APIKey } from './secret'
+import Select from './select';
 let localStorage = window.localStorage
-
-
-export const WeatherContext = createContext()
 
 function App() {
 
   const [cityName, setCityName] = useState('')
+  const [allGeoLocations, setAllGeoLocations] = useState([])
   const [weatherResults, setWeatherResults] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('')
+
+  const handleSelectChange = (e) => {
+    let obj = JSON.parse(e.target.value)
+
+    console.log("Handle Select Change", e.target.value, obj)
+  }
 
   const checkLocalStorage = (name) => {
     let lowerCaseCityName = name.toLowerCase()
     let localItem = localStorage.getItem(lowerCaseCityName)
-    console.log('localItem', localItem)
     let parsedItem = JSON.parse(localItem)
     
     if(parsedItem){
-      setWeatherResults({parsedItem, name})
-      return parsedItem
+      let {data, name, state, country} = parsedItem
+      setWeatherResults({data, name, state, country})
+      return true
     } else {
       return false
     }
   }
 
-  const getGeoCoordinates = async () => {
+  const getGeoCoordinates = async (e) => {
     try {
-      let response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${APIKey}`)
+      e.preventDefault()
+      let response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`)
       let data = await response.json()
+      setAllGeoLocations(data)
+      console.log('GEO LOCATION', data)
       if(data){
         apiCall(data[0])
       }
@@ -40,9 +49,8 @@ function App() {
   }
 
   const apiCall = async (obj) => {
-    let {lat, lon, name} = obj
-
-    let localStorageData = await checkLocalStorage(name)
+    let {lat, lon, name, state, country} = obj
+    let localStorageData = checkLocalStorage(name)
 
     if(localStorageData) return 
 
@@ -51,25 +59,32 @@ function App() {
       let response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&&units=imperial&appid=${APIKey}`)
       let data = await response.json()
       
-      setWeatherResults({data, name})
+      setWeatherResults({data, name, state, country})
       let cityNameToLowerCase = name.toLowerCase()
-      let stringifiedData = JSON.stringify(data)
+      let obj = {data, name, state, country}
+      let stringifiedData = JSON.stringify(obj)
       localStorage.setItem(cityNameToLowerCase, stringifiedData)
     } catch (e){
       console.log(e)
-      
     }
 
   }
 
 
   return (
-  <WeatherContext.Provider value={weatherResults}>
+
     <div className="App">
       <NavBar setCityName={setCityName} getGeoCoordinates={getGeoCoordinates}/>
-      <CurrentWeatherCard />
+      {allGeoLocations 
+      && 
+      <Select onChange={handleSelectChange}>
+        {allGeoLocations.map((location, index) => {
+          return <option value={JSON.parse(location)} key={index}>{location.name}, {location.state} - {location.country}</option>
+        })}
+      </Select>}
+      
+      <CurrentWeatherCard data={weatherResults}/>
     </div>
-  </WeatherContext.Provider>
   );
 }
 
