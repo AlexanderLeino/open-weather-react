@@ -3,6 +3,7 @@ import { NavBar } from './components/navbar';
 import { CurrentWeatherCard } from './components/currentWeather';
 import { APIKey } from './secret'
 import Select from './select';
+import { FiveDayForecast } from './components/five-day-forecast';
 let localStorage = window.localStorage
 
 function App() {
@@ -13,14 +14,12 @@ function App() {
   const [selectedLocation, setSelectedLocation] = useState('')
 
   const handleSelectChange = (e) => {
-    let obj = JSON.parse(e.target.value)
-
-    console.log("Handle Select Change", e.target.value, obj)
+    let foundLocation = allGeoLocations[e.target.value]
+    apiCall(foundLocation)
   }
 
-  const checkLocalStorage = (name) => {
-    let lowerCaseCityName = name.toLowerCase()
-    let localItem = localStorage.getItem(lowerCaseCityName)
+  const checkLocalStorage = (key) => {
+    let localItem = localStorage.getItem(key)
     let parsedItem = JSON.parse(localItem)
     
     if(parsedItem){
@@ -50,7 +49,8 @@ function App() {
 
   const apiCall = async (obj) => {
     let {lat, lon, name, state, country} = obj
-    let localStorageData = checkLocalStorage(name)
+    let key = `${name}-${state}-${country}`
+    let localStorageData = checkLocalStorage(key)
 
     if(localStorageData) return 
 
@@ -60,10 +60,10 @@ function App() {
       let data = await response.json()
       
       setWeatherResults({data, name, state, country})
-      let cityNameToLowerCase = name.toLowerCase()
+      let resultKey = `${name}-${state}-${country}`
       let obj = {data, name, state, country}
       let stringifiedData = JSON.stringify(obj)
-      localStorage.setItem(cityNameToLowerCase, stringifiedData)
+      localStorage.setItem(resultKey, stringifiedData)
     } catch (e){
       console.log(e)
     }
@@ -79,11 +79,12 @@ function App() {
       && 
       <Select onChange={handleSelectChange}>
         {allGeoLocations.map((location, index) => {
-          return <option value={JSON.parse(location)} key={index}>{location.name}, {location.state} - {location.country}</option>
+          return <option value={index} key={index}>{location.name}, {location.state} - {location.country}</option>
         })}
       </Select>}
       
       <CurrentWeatherCard data={weatherResults}/>
+      <FiveDayForecast data={weatherResults}/>
     </div>
   );
 }
