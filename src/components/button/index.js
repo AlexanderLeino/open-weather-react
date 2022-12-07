@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { darken, margin } from "polished";
+import { darken } from "polished";
 
 const StyledButton = styled.button`
   display: flex;

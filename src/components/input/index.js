@@ -96,12 +96,6 @@ const Input = ({
     let value = e.target.value
     setCityName(value)
   }
-
-  const handleSubmit = () => {
-    console.log('submitting')
-  }
-
-
     return (
       <div style={{ height: "70px", width: fullWidth ? "100%" : "auto" }}>
         <InputContainer
@@ -116,7 +110,6 @@ const Input = ({
             placeholder={placeholder}
             type={type}
             width={width}
-            onSubmit={handleSubmit}
             height={height}
             onChange={handleInputChange}
             required={required}
