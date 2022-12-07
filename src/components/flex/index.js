@@ -9,6 +9,7 @@ const FlexBox = styled.div`
     margin: ${({margin}) => margin ? margin : 0};
     background-color: ${({backgroundColor}) => backgroundColor ? backgroundColor : null};
     height: ${({height}) => height ? height : 'auto'};
+    width: ${({width}) => width ? width : 'auto'};
 `
 
 

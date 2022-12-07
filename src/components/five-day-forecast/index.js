@@ -1,19 +1,23 @@
 import moment from 'moment/moment'
-import React from 'react'
+import React, {useState} from 'react'
 import { Flex } from '../flex'
+import {BsArrowBarDown} from 'react-icons/bs'
+import { HourlyCard } from '../hourlyCard'
 const date = new Date()
 console.log("New Date", date.setDate(date.getDate() + 1 ))
 
 
 export const FiveDayForecast = ({data}) => {
-    console.log('Weather Results', data?.data?.daily)
+    console.log('Weather Results', data?.data)
+    const [isExpanded, setIsExpanded] = useState(false)
   return (
-    <Flex justifyContent='space-between' margin='0px 10px 0px 10px'>
+    <Flex justifyContent='space-around' margin='25px 10px 0px 10px'>
         {
             data?.data?.daily.map((dataForDay, index) => {
+                if(index > 6) return 
                 return (
-                <Flex flexDirection='column'>
-                    <div>{moment().add(index + 1, 'days').format('L')}</div>
+                <Flex flexDirection='column' width='150px'>
+                    <div style={{textAlign: 'center'}}>{moment().add(index + 1, 'days').format('L')}</div>
                     <Flex justifyContent='space-between'>
                         <div>Temp:</div>
                         <div>{dataForDay.temp.day}</div>
@@ -28,10 +32,21 @@ export const FiveDayForecast = ({data}) => {
                         <div>{dataForDay.temp.max}</div>
                     </Flex>
                     <Flex justifyContent='space-between'>
-                        <div>Wind Speed:</div>
-                        <div>{dataForDay?.weather[0].wind_speed}</div>
+                        <div>Wind:</div>
+                        <div>{dataForDay?.wind_speed}</div>
                     </Flex>
-                   
+                    <Flex flexDirection='column' alignItems='center' justifyContent='center' onClick={() => setIsExpanded(!isExpanded)}>
+                        {isExpanded 
+                        ? null 
+                        :  
+                        <>
+                        <div>Hourly</div>
+                        <BsArrowBarDown/>
+                        </>
+                        }
+                       
+                    </Flex>
+                        <HourlyCard key={index} isExpanded={isExpanded} hourlyData={data?.data?.hourly}/>
                 </Flex>
                 )
             })
