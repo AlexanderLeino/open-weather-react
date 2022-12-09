@@ -1,15 +1,11 @@
 import moment from 'moment/moment'
 import React, {useState} from 'react'
 import { Flex } from '../flex'
-import {BsArrowBarDown} from 'react-icons/bs'
+
 import { HourlyCard } from '../hourlyCard'
 const date = new Date()
-console.log("New Date", date.setDate(date.getDate() + 1 ))
-
 
 export const FiveDayForecast = ({data}) => {
-    console.log('Weather Results', data?.data)
-    const [isExpanded, setIsExpanded] = useState(false)
   return (
     <Flex justifyContent='space-around' margin='25px 10px 0px 10px'>
         {
@@ -35,18 +31,8 @@ export const FiveDayForecast = ({data}) => {
                         <div>Wind:</div>
                         <div>{dataForDay?.wind_speed}</div>
                     </Flex>
-                    <Flex flexDirection='column' alignItems='center' justifyContent='center' onClick={() => setIsExpanded(!isExpanded)}>
-                        {isExpanded 
-                        ? null 
-                        :  
-                        <>
-                        <div>Hourly</div>
-                        <BsArrowBarDown/>
-                        </>
-                        }
-                       
-                    </Flex>
-                        <HourlyCard key={index} isExpanded={isExpanded} hourlyData={data?.data?.hourly}/>
+                   
+                        <HourlyCard key={index} hourlyData={data?.data?.hourly}/>
                 </Flex>
                 )
             })

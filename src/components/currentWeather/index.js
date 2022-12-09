@@ -3,7 +3,7 @@ import { Flex } from '../flex'
 import moment from 'moment'
 import styled from 'styled-components'
 import { WeatherIconSwitch } from '../../utils.js/weatherIcons'
-
+let momentTZ = require('moment-timezone');
 const Location = styled.div`
   font-size: ${({fontSize}) => fontSize ? fontSize : '22px'};
   font-weight: bold;
@@ -12,8 +12,13 @@ const Location = styled.div`
 export const CurrentWeatherCard = ({data}) => {
   let {data: results , name, state, country} = data
   let currentData = results?.current
-  let sunRise = moment.unix(currentData?.sunrise).format("HH:mm");
-  let sunSet = moment.unix(currentData?.sunset).format("hh:mm")
+
+  let sunRise = moment.utc(currentData?.sunrise,'X').add(results?.timezone_offset,'seconds').format('HH:mm a');
+  let sunSet =  moment.utc(currentData?.sunset,'X').add(results?.timezone_offset,'seconds').format('hh:mm a');
+  
+let x = 
+console.log(currentData)
+
   return (
     <Flex flexDirection='column' alignItems='center'>
       
@@ -33,8 +38,8 @@ export const CurrentWeatherCard = ({data}) => {
         <div>{currentData?.feels_like}</div>
         <div>{currentData?.wind_speed}</div>
         <div>{currentData?.weather[0].description}</div>
-        <div>Sunrise {sunRise}am</div>
-        <div>Sunset {sunSet}pm</div>
+        <div>Sunrise {sunRise}</div>
+        <div>Sunset {sunSet}</div>
       </>
       :
       <div></div>
