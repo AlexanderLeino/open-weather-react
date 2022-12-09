@@ -1,12 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flex } from '../flex'
 import moment from 'moment'
 import styled from 'styled-components'
 import { WeatherIconSwitch } from '../../utils.js/weatherIcons'
 import { degToCompass } from '../../utils.js/degreesToCompass'
-import {FiWind} from 'react-icons/fi'
 import 'weather-icons/css/weather-icons.css';
-
 
 const Location = styled.div`
   font-size: ${({fontSize}) => fontSize ? fontSize : '22px'};
@@ -17,15 +15,13 @@ const CapitalizedText = styled.div`
     text-transform: capitalize;
 `
 
-export const CurrentWeatherCard = ({data}) => {
+export const CurrentWeatherCard = ({data, sunRise, sunSet, timeOfday, currentTime}) => {
   let {data: results , name, state, country} = data
-  console.log('Results', results)
   let currentData = results?.current
-  let sunRise = moment.utc(currentData?.sunrise,'X').add(results?.timezone_offset,'seconds').format('HH:mm a');
-  let sunSet =  moment.utc(currentData?.sunset,'X').add(results?.timezone_offset,'seconds').format('hh:mm a');
-  let icon = `http://openweathermap.org/img/w/${currentData?.weather[0].icon}.png`
+  console.log('Time Of Day', timeOfday)
+  console.log(sunRise, sunSet, timeOfday)
   return (
-    <Flex flexDirection='column' alignItems='center'>
+    <Flex flexDirection='column' alignItems='center' justifyContent='center'>
       
       {results
       ? 
@@ -38,14 +34,24 @@ export const CurrentWeatherCard = ({data}) => {
 
         }
       </Flex>
-      <Flex alignItems='center'>
-        <img src={icon}/>
+      <Flex alignItems='center' justifyContent='center'>
+        {WeatherIconSwitch(currentData?.weather[0].description, timeOfday, false)}
         <div>{currentData?.temp.toFixed(0)}<span>&#176;</span>F</div>
       </Flex>
         <CapitalizedText>{currentData.weather[0].description}</CapitalizedText>
-        <Flex alignItems='center'>{currentData?.wind_speed} MPH {degToCompass(currentData?.wind_deg)}</Flex>
-        <div><i className='wi wi-miscellaneous wi-sunrise'></i>{sunRise}</div>
-        <div><i className='wi wi-miscellaneous wi-sunset'></i>{sunSet}</div>
+        <div>{currentTime}</div>
+        <Flex alignItems='center' justifyContent='space-between'>
+          <div style={{textAlign:'left'}}>{degToCompass(currentData?.wind_deg)}</div>
+          <div>{currentData?.wind_speed} MPH</div>
+        </Flex>
+        <Flex alignItems='center' justifyContent='space-between'>
+          <i className='wi wi-miscellaneous wi-sunrise' style={{textAlign:'left'}}></i>
+          <div>{sunRise}</div>
+        </Flex>
+        <Flex alignItems='center' justifyContent='space-between'>
+        <i className='wi wi-miscellaneous wi-sunset' style={{textAlign:'left'}}></i>
+        <div>{sunSet}</div>
+        </Flex>
        
       </>
       :

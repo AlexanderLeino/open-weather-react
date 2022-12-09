@@ -1,27 +1,25 @@
 import moment from 'moment/moment'
-import React, {useState} from 'react'
+import React from 'react'
 import { Flex } from '../flex'
 import styled from 'styled-components'
-
-import { HourlyCard } from '../hourlyCard'
+import { WeatherIconSwitch } from '../../utils.js/weatherIcons'
 const date = new Date()
 
 const CapitalizedText = styled.div`
     text-transform: capitalize;
 `
 
-export const FiveDayForecast = ({data}) => {
+export const SevenDayForecast = ({data, timeOfDay}) => {
   return (
     <Flex justifyContent='space-around' margin='25px 10px 0px 10px'>
         {
             data?.data?.daily.map((dataForDay, index) => {
-                let icon = `http://openweathermap.org/img/w/${dataForDay?.weather[0].icon}.png`
                 if(index > 6) return 
                 return (
                 <Flex flexDirection='column' width='150px'>
                     <div style={{textAlign: 'center'}}>{moment().add(index + 1, 'days').format('dddd')}</div>
                     <Flex flexDirection='column' alignItems='center'>
-                        <img src={icon}/>
+                        <span style={{fontSize: '50px'}}>{WeatherIconSwitch(dataForDay?.weather[0].description, timeOfDay, true)}</span>
                         <CapitalizedText>{(dataForDay?.weather[0].description)}</CapitalizedText>
                     </Flex>
                     <Flex justifyContent='space-between'>
