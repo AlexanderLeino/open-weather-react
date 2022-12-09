@@ -10,6 +10,7 @@ const FlexBox = styled.div`
     background-color: ${({backgroundColor}) => backgroundColor ? backgroundColor : null};
     height: ${({height}) => height ? height : 'auto'};
     width: ${({width}) => width ? width : 'auto'};
+    flex-wrap: wrap;
 `
 
 

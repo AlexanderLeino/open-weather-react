@@ -1,38 +1,71 @@
 import moment from 'moment/moment'
 import React, {useState} from 'react'
 import { Flex } from '../flex'
+import styled from 'styled-components'
 
 import { HourlyCard } from '../hourlyCard'
 const date = new Date()
+
+const CapitalizedText = styled.div`
+    text-transform: capitalize;
+`
 
 export const FiveDayForecast = ({data}) => {
   return (
     <Flex justifyContent='space-around' margin='25px 10px 0px 10px'>
         {
             data?.data?.daily.map((dataForDay, index) => {
+                let icon = `http://openweathermap.org/img/w/${dataForDay?.weather[0].icon}.png`
                 if(index > 6) return 
                 return (
                 <Flex flexDirection='column' width='150px'>
-                    <div style={{textAlign: 'center'}}>{moment().add(index + 1, 'days').format('L')}</div>
+                    <div style={{textAlign: 'center'}}>{moment().add(index + 1, 'days').format('dddd')}</div>
+                    <Flex flexDirection='column' alignItems='center'>
+                        <img src={icon}/>
+                        <CapitalizedText>{(dataForDay?.weather[0].description)}</CapitalizedText>
+                    </Flex>
                     <Flex justifyContent='space-between'>
                         <div>Temp:</div>
-                        <div>{dataForDay.temp.day}</div>
+                        <div>{dataForDay.temp.day}<span>&#176;</span>F</div>
                     </Flex>
                     <Flex justifyContent='space-between'>
                         <div>Low:</div>
-                        <div>{dataForDay.temp.min}</div>
+                        <div>{dataForDay.temp.min}<span>&#176;</span>F</div>
                     </Flex>
                     
                     <Flex justifyContent='space-between'>
                         <div>High:</div>
-                        <div>{dataForDay.temp.max}</div>
+                        <div>{dataForDay.temp.max}<span>&#176;</span>F</div>
                     </Flex>
                     <Flex justifyContent='space-between'>
                         <div>Wind:</div>
-                        <div>{dataForDay?.wind_speed}</div>
+                        <div>{dataForDay?.wind_speed} MPH</div>
                     </Flex>
-                   
-                        <HourlyCard key={index} hourlyData={data?.data?.hourly}/>
+                    <Flex justifyContent='space-between' alignItems='center'>
+                        <div>Percipitation:</div>
+                        <div>{(dataForDay?.pop * 100).toFixed()}%</div>
+                    </Flex>
+                    {
+                        dataForDay?.snow 
+                        ?
+                        <Flex justifyContent='space-between' alignItems='center'>
+                            <div>Projected: </div>
+                            <div>{(dataForDay.snow / 25).toFixed(2)} in</div>
+                        </Flex>
+                        : null
+                    }
+                     {
+                        dataForDay?.rain 
+                        ?
+                        <Flex alignItems='center'>
+                            <div>Projected: </div>
+                            <div>{(dataForDay.rain / 25).toFixed(2)} in</div>
+                        </Flex>
+                       
+                        : null
+                    }
+                    
+
                 </Flex>
                 )
             })
