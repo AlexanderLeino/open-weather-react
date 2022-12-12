@@ -14,12 +14,12 @@ function App() {
   const [weatherResults, setWeatherResults] = useState("");
   const [timeOfday, setTimeOfDay] = useState("");
   const [historicalData, setHistoricalData] = useState([])
+  const [hourlyData, setHourlyData] = useState([])
 
-  useEffect(() => {
-    console.log(historicalData)
-  }, [historicalData])
   let currentData = weatherResults?.data?.current;
-
+  useEffect(() => {
+    console.log('Hourly', hourlyData)
+  }, [hourlyData])
   let currentTime = moment
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -39,8 +39,8 @@ function App() {
     } else {
       setTimeOfDay("day");
     }
-    console.log("Weather Results", weatherResults);
     getHistoricalData(weatherResults);
+    getHourlyData(weatherResults)
   }, [weatherResults]);
   const handleSelectChange = (e) => {
     let foundLocation = allGeoLocations[e.target.value];
@@ -131,14 +131,42 @@ function App() {
       let date = moment.utc(data?.data[0]?.dt, "X")
       .add(data?.timezone_offset, "seconds")
       .format("YYYY");
-      infoArray.push({date, weather: data?.data[0]})
+      infoArray.unshift({date, weather: data?.data[0]})
 
     }
-    setHistoricalData(infoArray)
+  
+    setHistoricalData({
+      labels: infoArray.map((data) => data.date),
+      datasets: [{
+        label: 'Temperature',
+        data: infoArray.map((data) => data.weather.temp)
+      }]
+    })
     
       // I am trying to take the current date and roll it back a total of 10 years
     
   };
+
+  const getHourlyData = async (obj) => {
+    console.log("CALLING GET HOURLY DATA", obj)
+    let filterData = obj?.data?.hourly?.slice(23)
+      
+
+        let hourlyTimes = filterData?.map((hourly) => {
+            let hours = moment.utc(hourly?.dt, "X")
+            .add(obj?.data?.timezone_offset, "seconds")
+            .format('hh:mm a')
+            return hours
+        })
+       
+        setHourlyData({
+            labels: hourlyTimes,
+            datasets: [{
+                label: 'Temperature',
+                data: filterData?.map((hourlyData) => hourlyData?.temp)
+            }]
+            })
+  }
 
   return (
     <div className="App">
@@ -165,7 +193,7 @@ function App() {
         timeOfday={timeOfday}
         currentTime={currentTime}
       />
-      <SecondaryNav data={weatherResults} timeOfDay={timeOfday} />
+      <SecondaryNav data={weatherResults} timeOfDay={timeOfday} historicalData={historicalData} hourlyData={hourlyData}/>
     </div>
   );
 }
