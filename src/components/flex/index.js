@@ -11,6 +11,7 @@ const FlexBox = styled.div`
     height: ${({height}) => height ? height : 'auto'};
     width: ${({width}) => width ? width : 'auto'};
     flex-wrap: wrap;
+    
 `
 
 

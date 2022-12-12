@@ -3,7 +3,6 @@ import { darken } from "polished";
 
 const StyledButton = styled.button`
   display: flex;
-  
   align-items: ${({ alignItems }) => (alignItems ? alignItems : "center")};
   justify-content: ${({ justifyContent }) =>
     justifyContent ? justifyContent : "center"};
@@ -29,7 +28,6 @@ const StyledButton = styled.button`
   margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom : null)};
   border-bottom: ${({ borderBottom }) => (borderBottom ? borderBottom : null)};
   margin-top: ${({marginTop}) => marginTop ? marginTop : 0};
-  background-color: #ff4800;
   &:hover {
     color: ${({ hoverColor }) => hoverColor || "white"};
     background: ${({ backgroundColor, hoverBackgroundColor }) =>
@@ -37,7 +35,7 @@ const StyledButton = styled.button`
       ? hoverBackgroundColor
       : backgroundColor
         ? darken(0.05, backgroundColor)
-        : 'black'};
+        : null};
   }
   &:disabled {
     border: ${({ disabledBorder }) =>

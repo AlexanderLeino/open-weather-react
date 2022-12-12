@@ -18,8 +18,7 @@ const CapitalizedText = styled.div`
 export const CurrentWeatherCard = ({data, sunRise, sunSet, timeOfday, currentTime}) => {
   let {data: results , name, state, country} = data
   let currentData = results?.current
-  console.log('Time Of Day', timeOfday)
-  console.log(sunRise, sunSet, timeOfday)
+ 
   return (
     <Flex flexDirection='column' alignItems='center' justifyContent='center'>
       
