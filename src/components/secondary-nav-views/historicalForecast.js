@@ -1,7 +1,7 @@
 import React from 'react'
-import { LineChart } from '../line-chart'
-export const HistoricalForecast = ({chartData}) => {
+
+export const HistoricalForecast = () => {
   return (
-    <LineChart chartData={chartData}/>
+    <div>historicalForecast</div>
   )
 }

@@ -19,8 +19,7 @@ const HistoricalButton = styled(Button)`
   background-color: ${({ selectedView }) =>
     selectedView === "Historical" ? "orange" : null};
 `;
-export const SecondaryNav = ({ data, timeOfDay, historicalData, hourlyData }) => {
-  console.log('HOURLY DATA IN SECONDARY NAV', hourlyData)
+export const SecondaryNav = ({ data, timeOfDay }) => {
   const [selectedView, setSelectedView] = useState("7 Day Forecast");
   const handleOnClick = (e) => {
     let value = e.target.value;
@@ -55,9 +54,9 @@ export const SecondaryNav = ({ data, timeOfDay, historicalData, hourlyData }) =>
       {selectedView === "7 Day Forecast" ? (
         <SevenDayForecast data={data} timeOfDay={timeOfDay} />
       ) : selectedView === "hourly" ? (
-        <HourlyForecast chartData={hourlyData} timeOfDay={timeOfDay} />
+        <HourlyForecast data={data} timeOfDay={timeOfDay} />
       ) : (
-        <HistoricalForecast data={data} timeOfDay={timeOfDay} chartData={historicalData} />
+        <HistoricalForecast data={data} timeOfDay={timeOfDay} />
       )}
     </>
   );
