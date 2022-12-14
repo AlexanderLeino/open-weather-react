@@ -7,7 +7,10 @@ import { degToCompass } from "../../utils.js/degreesToCompass";
 import "weather-icons/css/weather-icons.css";
 import Card from "../card";
 import Select from "../select";
-import {BsUmbrellaFill} from 'react-icons/bs'
+import {AiFillEyeInvisible} from 'react-icons/ai'
+import {BsUmbrellaFill, BsFillDropletFill} from 'react-icons/bs'
+import {WiHumidity} from 'react-icons/wi'
+import {TiWeatherDownpour} from 'react-icons/ti'
 
 const Text = styled.div`
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "20px")};
@@ -17,7 +20,15 @@ const Text = styled.div`
 `;
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 4fr 6fr;
+  grid-template-columns: 4fr 2fr 6fr;
+  grid-gap: 2rem;
+`
+const Tile = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid lightgrey;
+  width: 100%;
 `
 export const CurrentWeatherCard = ({
   data,
@@ -83,7 +94,7 @@ export const CurrentWeatherCard = ({
         
       </Card>
     <Grid>
-      <Card backgroundColor='lightBlue' width={'100%'} height='100%'>
+      <Card backgroundColor='lightBlue' width={'auto'} height='100%' borderRadius='.375rem' boxShadow={'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;'} border={'1px solid black'}>
         
           <span style={{ fontSize: "75px", marginRight: "10px" }}>
             {WeatherIconSwitch(
@@ -104,8 +115,40 @@ export const CurrentWeatherCard = ({
         {results && <Flex justifyContent='center'><BsUmbrellaFill/><div>{(results?.daily[0].pop) *100}%</div> Chance Of Percipitation</Flex>}
         
       </Card>
-      <Card backgroundColor='lightyellow' height='100%'></Card>
-      <Card backgroundColor='lightgreen' height='100%'></Card>
+      <Card backgroundColor='lightyellow' width='auto' height='100%' borderRadius='.375rem' boxShadow={'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;'} border={'1px solid black'}>
+        <Tile>
+          <div>Dew Point</div>
+          <Flex alignItems={'center'}>
+            <div>{currentData?.dew_point}</div>
+            <BsFillDropletFill />
+          </Flex>
+        </Tile>
+        <Tile>
+          <div>Visibility</div>
+          <Flex alignItems={'center'}>
+              <div>{currentData?.visibility}</div>
+              <AiFillEyeInvisible />
+          </Flex>
+        </Tile>
+        <Tile> 
+          <div>Wind</div>
+          <Flex>
+            <div>{currentData?.wind_speed} MPH</div>
+            {degToCompass(currentData?.wind_deg)}
+          </Flex>
+        </Tile>
+        <Tile>
+          <div>Humidity</div>
+          <Flex alignItems={'center'}>
+            <div>{currentData?.humidity}</div>
+            <WiHumidity />
+          </Flex>
+        </Tile>
+
+        
+       
+      </Card>
+      <Card backgroundColor='lightgreen'width='auto' border={'1px solid black'} height='100%' borderRadius='.375rem' boxShadow={"rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;"}></Card>
     </Grid>
         <Flex alignItems="center" justifyContent="space-between">
           <Text>{currentData?.wind_speed} MPH</Text>

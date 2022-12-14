@@ -25,8 +25,8 @@ const CardContainer = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
   z-index: ${({ zIndex }) => (zIndex ? zIndex : "0")};
-  box-shadow: ${({ shadow }) =>
-    shadow ? "0px 1px 3px rgba(0,0,0,.35)" : "none"};
+  box-shadow: ${({ boxShadow }) =>
+    boxShadow ? boxShadow : "none"};
 `;
 
 const Card = (props) => {
