@@ -1,3 +1,4 @@
+import { border } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -11,7 +12,10 @@ const FlexBox = styled.div`
     height: ${({height}) => height ? height : 'auto'};
     width: ${({width}) => width ? width : 'auto'};
     flex-wrap: wrap;
-    
+    border: ${({border}) => border ? border : '0px'};
+    padding: ${({padding}) => padding ? padding : '0px'};
+    box-shadow: ${({boxShadow}) => boxShadow ? boxShadow : '0px'};
+    border-radius: ${({borderRadius}) => borderRadius ? borderRadius : '0px'};
 `
 
 

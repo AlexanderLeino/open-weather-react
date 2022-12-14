@@ -1,23 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import {VscSearch} from 'react-icons/vsc'
+import Button from "../button";
 
-const Label = styled.label`
-  display: ${({ labelHidden }) => labelHidden ? 'none' : 'block'};
-  font-size: ${({ subtitleFontSize }) =>
-    subtitleFontSize ? subtitleFontSize : "1em"};
-  color: ${({ color, subtitleColor }) =>
-    subtitleColor ? subtitleColor : color ? color : `black`};
-  opacity: 1;
-  transform: translateY(-1.25em);
-  transform-origin: 0 0;
-  transition: all 0.3s;
-  pointer-events: none;
-  margin-left: 5px;
-  margin-top: -8px;
-`;
 const StyledInput = styled.input`
   box-shadow: none;
   border-radius: 0px;
+  position: relative;
   width: ${({ width }) => (width ? width : "fit-content")};
   height: ${({ height }) => (height ? height : "10px")};
   background: ${({ backgroundColor }) =>
@@ -29,66 +18,35 @@ const StyledInput = styled.input`
   color: ${({ color }) => (color ? color : `black`)};
   font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : null)};
   white-space: normal;
+  margin: 10px 0px 10px 0px;
+  border-radius: 25px;
+  :placeholder-shown {
+    padding-left: 60px;
+  }
+  :not(:placeholder-shown) {
+    padding-left: 60px;
+  }
 
-  &::placeholder {
-    color: transparent;
-  }
-  &:focus {
-    box-shadow: none;
-    outline: none;
-    border-color: black;
-  }
-  &:focus + ${Label}, :not(:placeholder-shown) + ${Label} {
-    transform: translateY(-3.0em) scale(0.8);
-    margin-top: 0;
-  }
-  &:focus + ${Label} {
-    margin-top: 0;
-  }
 `;
 
-const InputContainer = styled.div`
-  transition: all 0.3s;
-  width: ${({ fullWidth }) => (fullWidth ? "100%" : "auto")};
-  margin: ${({ margin, labelHidden }) => {
-    return labelHidden
-      ? 0
-      : margin
-        ? margin
-        : '25px 0px 0px 0px'
-  }};
-  margin-right: ${({marginRight}) => {
-  return  marginRight ? marginRight : null
-  }};
-`;
+
 
 const Input = ({
   setCityName, 
-  handleChange, 
   placeholder,
   type,
   color,
   height,
   width,
-  subtitleColor,
-  calenderColor,
   required = false,
-  labelHidden,
   disabled,
-  onChange,
   name,
   id,
   label,
   value,
   border,
-  labelBackgroundColor,
-  margin,
-  fullWidth,
   backgroundColor,
-  multiple = false,
-  min,
-  marginRight,
-  step
+  getGeoCoordinates,
 }) => {
 
   const handleInputChange = (e) => {
@@ -97,14 +55,7 @@ const Input = ({
     setCityName(value)
   }
     return (
-      <div style={{ height: "70px", width: fullWidth ? "100%" : "auto" }}>
-        <InputContainer
-          margin={margin}
-          fullWidth={fullWidth}
-          labelHidden={labelHidden}
-          marginRight={marginRight}
-          
-        >
+        <>
           <StyledInput
             color={color}
             placeholder={placeholder}
@@ -120,19 +71,9 @@ const Input = ({
             border={border}
             disabled={disabled}
             backgroundColor={backgroundColor}
-            multiple={multiple}
-            
           />
-          <Label
-            htmlFor={type}
-            subtitleColor={subtitleColor}
-            color={color}
-            labelHidden={labelHidden}
-          >
-            {label}
-          </Label>
-        </InputContainer>
-      </div>
+          
+        </>
     )
 };
 

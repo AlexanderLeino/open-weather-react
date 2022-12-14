@@ -3,6 +3,11 @@ import { darken } from "polished";
 
 const StyledButton = styled.button`
   display: flex;
+  position: relative;
+  top: ${({top}) => top ? top : 0};
+  bottom: ${({bottom}) => bottom ? bottom : 0};
+  left: ${({left}) => left ? left : 0};
+  right: ${({right}) => right ? right : 0};
   align-items: ${({ alignItems }) => (alignItems ? alignItems : "center")};
   justify-content: ${({ justifyContent }) =>
     justifyContent ? justifyContent : "center"};

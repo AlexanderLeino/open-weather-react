@@ -1,5 +1,6 @@
 import 'weather-icons/css/weather-icons.css';
-export const WeatherIconSwitch = (weatherType, timeOfDay, forSevenDayForecast = true) => {
+export const WeatherIconSwitch = (weatherType = 'rain', timeOfDay, forSevenDayForecast = true) => {
+    console.log(timeOfDay)
     let weather
     if(weatherType.includes('snow')){
         weather = 'snow'

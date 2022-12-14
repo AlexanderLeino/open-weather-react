@@ -56,8 +56,8 @@ const TriangleContainer = styled.span`
   display: ${({ triangleDisplay }) =>
     triangleDisplay ? triangleDisplay : "inline"};
   position: relative;
-  top: ${({ triangleTop }) => (triangleTop ? triangleTop : 0)};
-  left: ${({ triangleLeft }) => (triangleLeft ? triangleLeft : "-20px")};
+  top: ${({ triangleTop }) => (triangleTop ? triangleTop : '-5px')};
+  left: ${({ triangleLeft }) => (triangleLeft ? triangleLeft : "-50px")};
   right: ${({ triangleRight }) => (triangleRight ? triangleRight : 0)};
   bottom: ${({ triangleBottom }) => (triangleBottom ? triangleBottom : 0)};
   transform: rotate(180deg);
@@ -65,6 +65,8 @@ const TriangleContainer = styled.span`
     triangleColor ? triangleColor : 'black'};
   font-size: ${({ triangleSize }) => (triangleSize ? triangleSize : "10px")};
   pointer-events: none;
+ 
+  
 `;
 
 const Select = ({

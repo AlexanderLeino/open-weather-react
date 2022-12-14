@@ -4,7 +4,7 @@ import Button from '../button'
 import { Flex } from '../flex'
 import styled from 'styled-components'
 import {VscSearch} from 'react-icons/vsc'
-
+import './navbar.css'
 const Title = styled.div`
   margin-top: 10px;
   font-size: 25px;
@@ -13,12 +13,15 @@ const Title = styled.div`
 `
 
 
+
 export const NavBar = ({setCityName, getGeoCoordinates}) => {
   return (
    
+      <>
       
-      <Flex alignItems='center' justifyContent='center' backgroundColor='#141414' height='60px'>
-        <form onSubmit={getGeoCoordinates} style={{padding: '0px', margin:'0px'}}>
+      <Flex className='navBar' alignItems='center' justifyContent='space-between'  height='60px'>
+        <div style={{fontWeight: 'bold', fontSize: '25px'}}>Weather Dashboard</div>
+        <form onSubmit={getGeoCoordinates} style={{padding: '0px', margin:'0px', height: '50px'}}>
           <Input 
               setCityName={setCityName}
               placeholder='City Name'
@@ -27,16 +30,17 @@ export const NavBar = ({setCityName, getGeoCoordinates}) => {
 
           />
           <Button 
-            iconBefore={<VscSearch style={{color: 'white'}}/>} 
-            backgroundColor='black' onClick={getGeoCoordinates} borderRadius='15px 0px 0px 15px'
+            iconBefore={<VscSearch style={{color: 'Black'}}/>} 
+            backgroundColor='lightgrey' onClick={getGeoCoordinates} borderRadius='15px 0px 0px 15px'
             position='relative'
             top='-42px'
             height='32px'
-            left='-2px'
-
+            left='-1px'
+            border={'0px 2px 0px 0px solid red'}
             />
         </form>
       </Flex>
+      </>
   
   )
 }

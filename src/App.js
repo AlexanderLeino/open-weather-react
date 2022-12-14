@@ -2,24 +2,31 @@ import { useState, useEffect } from "react";
 import { NavBar } from "./components/navbar";
 import { CurrentWeatherCard } from "./components/currentWeather";
 import { APIKey } from "./secret";
-import Select from "./select";
+import Select from "./components/select";
 import moment from "moment";
 import { Flex } from "./components/flex";
 import { SecondaryNav } from "./components/secondary-nav";
+import styled from "styled-components";
+import indexCss from './index.css'
 let localStorage = window.localStorage;
+
+const AppContainer = styled.div`
+  background-color: #a3abad05;
+`
+
 
 function App() {
   const [cityName, setCityName] = useState("");
   const [allGeoLocations, setAllGeoLocations] = useState([]);
   const [weatherResults, setWeatherResults] = useState("");
   const [timeOfday, setTimeOfDay] = useState("");
-  const [historicalData, setHistoricalData] = useState([])
+  const [historicalData, setHistoricalData] = useState([]);
+  const [hourlyData, setHourlyData] = useState([]);
 
-  useEffect(() => {
-    console.log(historicalData)
-  }, [historicalData])
   let currentData = weatherResults?.data?.current;
-
+  useEffect(() => {
+    console.log("Hourly", hourlyData);
+  }, [hourlyData]);
   let currentTime = moment
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -34,18 +41,17 @@ function App() {
     .format("hh:mm a");
 
   useEffect(() => {
-    if (currentTime > sunSet) {
+    let currentTimeFormat = moment(currentTime, "HH:mm a");
+    let sunSetTimeFormat = moment(sunSet, "HH:mm a");
+    if (currentTimeFormat > sunSetTimeFormat) {
       setTimeOfDay("night");
     } else {
       setTimeOfDay("day");
     }
-    console.log("Weather Results", weatherResults);
     getHistoricalData(weatherResults);
+    getHourlyData(weatherResults);
   }, [weatherResults]);
-  const handleSelectChange = (e) => {
-    let foundLocation = allGeoLocations[e.target.value];
-    apiCall(foundLocation);
-  };
+
 
   const checkLocalStorage = (key) => {
     let localItem = localStorage.getItem(key);
@@ -74,14 +80,14 @@ function App() {
         setAllGeoLocations(data);
       }
       if (data) {
-        apiCall(data[0]);
+        getWeatherData(data[0]);
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const apiCall = async (obj) => {
+  const getWeatherData = async (obj) => {
     if (!obj) {
       alert(
         "We couldnt find a city with that name. Please reenter or try something else!"
@@ -110,63 +116,86 @@ function App() {
   };
 
   const getHistoricalData = async (obj) => {
-    if(!obj) return
+    if (!obj) return;
     let {
       lat,
       lon,
       data: { current },
     } = obj;
-    let infoArray = []
-    for(let i = 0; i < 11 ; i++){
-      let timeStamp =moment.utc(current?.dt, "X")
-      .add(current.timezone_offset, "seconds")
-      .subtract(i, 'years')
+    let infoArray = [];
+    for (let i = 0; i < 11; i++) {
+      let timeStamp = moment
+        .utc(current?.dt, "X")
+        .add(current.timezone_offset, "seconds")
+        .subtract(i, "years");
 
-      let timeStampConvertedUnix = (Date.parse((timeStamp)) / 1000)
+      let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
       let response = await fetch(
         `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
       );
-    
-      let data = await response.json();
-      let date = moment.utc(data?.data[0]?.dt, "X")
-      .add(data?.timezone_offset, "seconds")
-      .format("YYYY");
-      infoArray.push({date, weather: data?.data[0]})
 
+      let data = await response.json();
+      let date = moment
+        .utc(data?.data[0]?.dt, "X")
+        .add(data?.timezone_offset, "seconds")
+        .format("YYYY");
+      infoArray.unshift({ date, weather: data?.data[0] });
     }
-    setHistoricalData(infoArray)
-    
-      // I am trying to take the current date and roll it back a total of 10 years
-    
+
+    setHistoricalData({
+      labels: infoArray.map((data) => data.date),
+      datasets: [
+        {
+          label: "Temperature",
+          data: infoArray.map((data) => data.weather.temp),
+        },
+      ],
+    });
+
+    // I am trying to take the current date and roll it back a total of 10 years
+  };
+
+  const getHourlyData = async (obj) => {
+    let filterData = obj?.data?.hourly?.slice(23);
+
+    let hourlyTimes = filterData?.map((hourly) => {
+      let hours = moment
+        .utc(hourly?.dt, "X")
+        .add(obj?.data?.timezone_offset, "seconds")
+        .format("hh:mm a");
+      return hours;
+    });
+
+    setHourlyData({
+      labels: hourlyTimes,
+      datasets: [
+        {
+          label: "Temperature",
+          data: filterData?.map((hourlyData) => hourlyData?.temp),
+        },
+      ],
+    });
   };
 
   return (
-    <div className="App">
+    <AppContainer className="App">
       <NavBar setCityName={setCityName} getGeoCoordinates={getGeoCoordinates} />
-
-      {allGeoLocations && (
-        <Flex margin={"0px 10px 0px 10px"}>
-          <Select onChange={handleSelectChange}>
-            {allGeoLocations.map((location, index) => {
-              return (
-                <option value={index} key={index}>
-                  {location.name}, {location.state} - {location.country}
-                </option>
-              );
-            })}
-          </Select>
-        </Flex>
-      )}
-
-      <CurrentWeatherCard
+        <CurrentWeatherCard
+          data={weatherResults}
+          sunRise={sunRise}
+          sunSet={sunSet}
+          timeOfday={timeOfday}
+          currentTime={currentTime}
+          allGeoLocations={allGeoLocations}
+          getWeatherData={getWeatherData}
+        />
+      <SecondaryNav
         data={weatherResults}
-        sunRise={sunRise}
-        sunSet={sunSet}
-        timeOfday={timeOfday}
-        currentTime={currentTime}
+        timeOfDay={timeOfday}
+        historicalData={historicalData}
+        hourlyData={hourlyData}
       />
-      <SecondaryNav data={weatherResults} timeOfDay={timeOfday} />
-    </div>
+    </AppContainer>
   );
 }
 
