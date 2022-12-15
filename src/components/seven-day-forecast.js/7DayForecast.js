@@ -3,7 +3,6 @@ import React from "react";
 import { Flex } from "../flex";
 import styled from "styled-components";
 import { WeatherIconSwitch } from "../../utils.js/weatherIcons";
-const date = new Date();
 
 const CapitalizedText = styled.div`
   text-transform: capitalize;
@@ -20,9 +19,9 @@ export const SevenDayForecast = ({ data, timeOfDay }) => {
             width="225px"
             key={index}
             border="1px solid black"
-            borderRadius='25px'
-            backgroundColor='lightBlue'
-            boxShadow='rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;'
+            borderRadius="25px"
+            backgroundColor="lightBlue"
+            boxShadow="rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;"
           >
             <div style={{ textAlign: "center", fontSize: "30px" }}>
               {moment()

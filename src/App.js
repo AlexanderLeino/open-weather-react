@@ -1,22 +1,19 @@
 import { useState, useEffect } from "react";
 import { NavBar } from "./components/navbar";
-import { CurrentWeatherCard } from "./components/currentWeather";
+import { CurrentWeatherContainer } from "./components/CurrentWeatherContainer";
 import { APIKey } from "./secret";
-import Select from "./components/select";
 import moment from "moment";
-import { Flex } from "./components/flex";
-import { SecondaryNav } from "./components/secondary-nav";
 import styled from "styled-components";
-import indexCss from './index.css'
+import indexCss from "./index.css";
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
-  background-color: #a3abad05;
-`
-
+  background-color: red;
+  padding: 15px;
+`;
 
 function App() {
-  const [cityName, setCityName] = useState("");
+  const [cityName, setCityName] = useState("Kalamazoo");
   const [allGeoLocations, setAllGeoLocations] = useState([]);
   const [weatherResults, setWeatherResults] = useState("");
   const [timeOfday, setTimeOfDay] = useState("");
@@ -24,9 +21,7 @@ function App() {
   const [hourlyData, setHourlyData] = useState([]);
 
   let currentData = weatherResults?.data?.current;
-  useEffect(() => {
-    console.log("Hourly", hourlyData);
-  }, [hourlyData]);
+
   let currentTime = moment
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -51,7 +46,6 @@ function App() {
     getHistoricalData(weatherResults);
     getHourlyData(weatherResults);
   }, [weatherResults]);
-
 
   const checkLocalStorage = (key) => {
     let localItem = localStorage.getItem(key);
@@ -151,8 +145,6 @@ function App() {
         },
       ],
     });
-
-    // I am trying to take the current date and roll it back a total of 10 years
   };
 
   const getHourlyData = async (obj) => {
@@ -176,24 +168,20 @@ function App() {
       ],
     });
   };
-
+  console.log("WEATHER RESULTS", weatherResults);
   return (
     <AppContainer className="App">
       <NavBar setCityName={setCityName} getGeoCoordinates={getGeoCoordinates} />
-        <CurrentWeatherCard
-          data={weatherResults}
-          sunRise={sunRise}
-          sunSet={sunSet}
-          timeOfday={timeOfday}
-          currentTime={currentTime}
-          allGeoLocations={allGeoLocations}
-          getWeatherData={getWeatherData}
-        />
-      <SecondaryNav
+      <CurrentWeatherContainer
         data={weatherResults}
-        timeOfDay={timeOfday}
+        sunRise={sunRise}
+        sunSet={sunSet}
+        timeOfday={timeOfday}
+        currentTime={currentTime}
+        allGeoLocations={allGeoLocations}
+        getWeatherData={getWeatherData}
         historicalData={historicalData}
-        hourlyData={hourlyData}
+        hourlyTemp={hourlyData}
       />
     </AppContainer>
   );

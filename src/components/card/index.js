@@ -24,6 +24,7 @@ const CardContainer = styled.div`
   flex-wrap: wrap;
   flex-grow: 1;
   flex-shrink: 1;
+  height: ${({height}) => height ? height : 'auto'};
   z-index: ${({ zIndex }) => (zIndex ? zIndex : "0")};
   box-shadow: ${({ boxShadow }) =>
     boxShadow ? boxShadow : "none"};
