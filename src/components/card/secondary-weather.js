@@ -23,7 +23,7 @@ const Tile = styled.div`
 export const SecondaryWeatherCard = ({sunSet, sunRise, currentData}) => {
     
   return (
-    <Card backgroundColor='lightyellow' width='auto' height='auto' borderRadius='.375rem' boxShadow={'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;'} border={'1px solid black'}>
+    <Card padding={'15px'} backgroundColor='lightyellow' width='auto' height='auto' borderRadius='.375rem' boxShadow={'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;'} border={'1px solid black'}>
       <Flex alignItems="center" justifyContent="space-between">
           <i
             className="wi wi-miscellaneous wi-sunrise"

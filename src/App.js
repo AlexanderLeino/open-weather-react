@@ -5,11 +5,18 @@ import { APIKey } from "./secret";
 import moment from "moment";
 import styled from "styled-components";
 import indexCss from "./index.css";
+import { SevenDayForecast } from "./components/seven-day-forecast.js/7DayForecast";
+
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
-  background-color: red;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ? backgroundColor : "#fcfcfc"};
+  border-radius: 20px;
   padding: 15px;
+  margin: ${({ margin }) => (margin ? margin : "0px")};
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 `;
 
 function App() {
@@ -19,50 +26,22 @@ function App() {
   const [timeOfday, setTimeOfDay] = useState("");
   const [historicalData, setHistoricalData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
-
-  let currentData = weatherResults?.data?.current;
-
-  let currentTime = moment
-    .utc(currentData?.dt, "X")
-    .add(weatherResults?.data?.timezone_offset, "seconds")
-    .format("hh:mm a");
-  let sunRise = moment
-    .utc(currentData?.sunrise, "X")
-    .add(weatherResults?.data?.timezone_offset, "seconds")
-    .format("hh:mm a");
-  let sunSet = moment
-    .utc(currentData?.sunset, "X")
-    .add(weatherResults?.data?.timezone_offset, "seconds")
-    .format("hh:mm a");
-
-  useEffect(() => {
-    let currentTimeFormat = moment(currentTime, "HH:mm a");
-    let sunSetTimeFormat = moment(sunSet, "HH:mm a");
-    if (currentTimeFormat > sunSetTimeFormat) {
-      setTimeOfDay("night");
-    } else {
-      setTimeOfDay("day");
+  const [previousLocations, setPreviousLocations] = useState([])
+  
+  const checkPreviousLocations = (location) => {
+    if(!weatherResults) return
+    let foundLocation = previousLocations.findIndex((weather) => weather.name === weatherResults.name)
+    if(foundLocation || foundLocation === 0){
+      let copiedState = previousLocations
+      copiedState[foundLocation] = weatherResults
+      setPreviousLocations(copiedState)
+    } 
+    
+    if(foundLocation === -1){
+      setPreviousLocations([...previousLocations, weatherResults])
     }
-    getHistoricalData(weatherResults);
-    getHourlyData(weatherResults);
-  }, [weatherResults]);
-
-  const checkLocalStorage = (key) => {
-    let localItem = localStorage.getItem(key);
-    let parsedItem = JSON.parse(localItem);
-
-    if (parsedItem) {
-      console.log("parseITEM", parsedItem);
-      let { data, name, state, country } = parsedItem;
-      let lon = data?.lon;
-      let lat = data?.lat;
-      setWeatherResults({ data, name, state, country, lon, lat });
-      return true;
-    } else {
-      return false;
-    }
-  };
-
+    
+  }
   const getGeoCoordinates = async (e) => {
     try {
       e.preventDefault();
@@ -91,7 +70,7 @@ function App() {
     let { lat, lon, name, state, country } = obj;
     let key = `${name}-${state}-${country}`;
     let localStorageData = checkLocalStorage(key);
-
+    checkPreviousLocations(localStorage)
     if (localStorageData) return;
 
     try {
@@ -104,6 +83,7 @@ function App() {
       let obj = { data, name, state, country, lat, lon };
       let stringifiedData = JSON.stringify(obj);
       localStorage.setItem(resultKey, stringifiedData);
+      checkPreviousLocations(data)
     } catch (e) {
       console.log(e);
     }
@@ -111,29 +91,28 @@ function App() {
 
   const getHistoricalData = async (obj) => {
     if (!obj) return;
-    let {
-      lat,
-      lon,
-      data: { current },
-    } = obj;
+
     let infoArray = [];
     for (let i = 0; i < 11; i++) {
+      let {
+        lat,
+        lon,
+        data,
+      } = obj;
+      
       let timeStamp = moment
-        .utc(current?.dt, "X")
-        .add(current.timezone_offset, "seconds")
-        .subtract(i, "years");
-
+        .utc(data?.current?.dt, "X")
+        .add(data?.timezone_offset, "seconds")
+        .subtract(i, "years")
+        .format('YYYY')
       let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
       let response = await fetch(
         `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
       );
 
-      let data = await response.json();
-      let date = moment
-        .utc(data?.data[0]?.dt, "X")
-        .add(data?.timezone_offset, "seconds")
-        .format("YYYY");
-      infoArray.unshift({ date, weather: data?.data[0] });
+      let foundData = await response.json();
+      console.log("foundData", foundData)
+      infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
     }
 
     setHistoricalData({
@@ -168,22 +147,91 @@ function App() {
       ],
     });
   };
-  console.log("WEATHER RESULTS", weatherResults);
+
+ 
+  useEffect(() => {
+    console.log(previousLocations)
+  }, [previousLocations])
+  let currentData = weatherResults?.data?.current;
+
+  let fullDate = moment
+    .utc(currentData?.dt, "X")
+    .add(weatherResults?.timezone_offset, "seconds")
+    .format("dddd, MMMM YYYY hh:mm a");
+
+  let currentTime = moment
+    .utc(currentData?.dt, "X")
+    .add(weatherResults?.data?.timezone_offset, "seconds")
+    .format("hh:mm a");
+  let sunRise = moment
+    .utc(currentData?.sunrise, "X")
+    .add(weatherResults?.data?.timezone_offset, "seconds")
+    .format("hh:mm a");
+  let sunSet = moment
+    .utc(currentData?.sunset, "X")
+    .add(weatherResults?.data?.timezone_offset, "seconds")
+    .format("hh:mm a");
+
+  useEffect(() => {
+    let currentTimeFormat = moment(currentTime, "HH:mm a");
+    let sunSetTimeFormat = moment(sunSet, "HH:mm a");
+    if (currentTimeFormat > sunSetTimeFormat) {
+      setTimeOfDay("night");
+    } else {
+      setTimeOfDay("day");
+    }
+    getHistoricalData(weatherResults);
+    getHourlyData(weatherResults);
+  }, [weatherResults]);
+ 
+  const checkLocalStorage = (key) => {
+    let localItem = localStorage.getItem(key);
+    let parsedItem = JSON.parse(localItem);
+
+    if (parsedItem) {
+      console.log("parseITEM", parsedItem);
+      let { data, name, state, country } = parsedItem;
+      let lon = data?.lon;
+      let lat = data?.lat;
+      setWeatherResults({ data, name, state, country, lon, lat });
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+
   return (
-    <AppContainer className="App">
-      <NavBar setCityName={setCityName} getGeoCoordinates={getGeoCoordinates} />
-      <CurrentWeatherContainer
-        data={weatherResults}
-        sunRise={sunRise}
-        sunSet={sunSet}
-        timeOfday={timeOfday}
-        currentTime={currentTime}
-        allGeoLocations={allGeoLocations}
-        getWeatherData={getWeatherData}
-        historicalData={historicalData}
-        hourlyTemp={hourlyData}
-      />
-    </AppContainer>
+    <>
+      <AppContainer margin={'0px 0px 20px 0px'}>
+        <NavBar
+          setCityName={setCityName}
+          getGeoCoordinates={getGeoCoordinates}
+          fullDate={fullDate}
+          getWeatherData={getWeatherData}
+          results={weatherResults}
+          allGeoLocations={allGeoLocations}
+        />
+      </AppContainer>
+      <AppContainer>
+        <CurrentWeatherContainer
+          data={weatherResults}
+          sunRise={sunRise}
+          sunSet={sunSet}
+          timeOfday={timeOfday}
+          currentTime={currentTime}
+          allGeoLocations={allGeoLocations}
+          getWeatherData={getWeatherData}
+          historicalData={historicalData}
+          hourlyTemp={hourlyData}
+          fullDate={fullDate}
+          previousLocations={previousLocations}
+        />
+      </AppContainer>
+      <AppContainer margin={"20px 0px 0px 0px"}>
+        <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
+      </AppContainer>
+    </>
   );
 }
 

@@ -19,7 +19,7 @@ const CardContainer = styled.div`
   height: ${({ height }) => (height ? height : "fit-content")};
   background-color: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "white"};
-  padding: ${({ padding }) => (padding ? padding : "15px")};
+  padding: ${({ padding }) => (padding ? padding : "0px")};
   margin: ${({ margin }) => (margin ? margin : "0")};
   flex-wrap: wrap;
   flex-grow: 1;
