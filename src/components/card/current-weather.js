@@ -127,7 +127,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
           >
             <BsUmbrellaFill style={{ fontSize: "20px", color: cardStyling.color, marginRight: '10px' }} />
             <Text fontWeight={"bold"} color={cardStyling?.color}>
-              {results?.daily?.[0]?.pop * 100}%
+              {(results?.daily?.[0]?.pop * 100).toFixed(0)}%
             </Text>
             <Text color={cardStyling?.color} fontWeight="bold" style={{marginLeft: '5px'}}>
               Chance Of Percipitation

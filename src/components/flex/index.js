@@ -19,7 +19,7 @@ const FlexBox = styled.div`
     border-radius: ${({borderRadius}) => borderRadius ? borderRadius : '0px'};
     flex-grow: ${({flexGrow}) => flexGrow ? flexGrow : 0};
     min-width: ${({minWidth}) => minWidth ? minWidth : 'auto'};
-   
+    align-content: ${({alignContent}) => alignContent ? alignContent : null};
 `
 
 

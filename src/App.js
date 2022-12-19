@@ -247,9 +247,7 @@ function App() {
         <ChartCard historicalData={historicalData} hourlyTemp={hourlyData} />
       </CardContainer>}
     </Flex>
-      
         <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
-      
     </>
   );
 }

@@ -48,11 +48,11 @@ export const ChartCard = ({historicalData = fakeData, hourlyTemp}) => {
       ) : (
         <LineChart chartData={hourlyTemp}/>
       )}
-      <Flex justifyContent="start" alignItems="center" margin={'5px 0px 0px 0px'}>
-        <Button onClick={handleOnClick} value="hourlyTemp">
+      <Flex justifyContent="start" alignItems="center" margin={'5px 0px 0px 0px'} flexWrap='nowrap'>
+        <Button onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="hourlyTemp" borderRight='0px'>
           Temp (Hourly)
         </Button>
-        <Button onClick={handleOnClick} value="historical">
+        <Button onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="historical">
           Historical
         </Button>
       </Flex>
