@@ -8,7 +8,7 @@ const StyledInput = styled.input`
   border-radius: 0px;
   position: relative;
   width: ${({ width }) => (width ? width : "fit-content")};
-  height: ${({ height }) => (height ? height : "10px")};
+  height: ${({ height }) => (height ? height : "15px")};
   background: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "white"};
   transition: all 2s;
@@ -25,6 +25,9 @@ const StyledInput = styled.input`
   }
   :not(:placeholder-shown) {
     padding-left: 60px;
+  }
+  :focus-visible {
+    outline: none;
   }
 
 `;

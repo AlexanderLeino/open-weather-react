@@ -33,6 +33,8 @@ const StyledButton = styled.button`
   margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom : null)};
   border-bottom: ${({ borderBottom }) => (borderBottom ? borderBottom : null)};
   margin-top: ${({marginTop}) => marginTop ? marginTop : 0};
+  border-right: ${({borderRight}) => borderRight ? borderRight : '0px'};
+  white-space: nowrap;
   &:hover {
     color: ${({ hoverColor }) => hoverColor || "white"};
     background: ${({ backgroundColor, hoverBackgroundColor }) =>
@@ -50,6 +52,9 @@ const StyledButton = styled.button`
     background: ${({ disabledBackgroundColor }) =>
     disabledBackgroundColor ? disabledBackgroundColor : "lightgrey"};
     cursor: not-allowed;
+  }
+  :focus {
+    background-color: lightgrey;
   }
 `;
 

@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "../card";
 import Button from '../button'
-export const PreviousSearch = ({setCity, previousLocations}) => {
+export const PreviousSearch = ({setCityName, previousLocations}) => {
   return (
     <Card
       backgroundColor="lightBlue"
@@ -17,7 +17,7 @@ export const PreviousSearch = ({setCity, previousLocations}) => {
     <div>Previously Searched Locations</div>
     {previousLocations.map((location) => {
         return (
-            <Button >{location.name}</Button>
+            <Button value={location} onClick={(e) => setCityName(e.target.value)}>{location.name}</Button>
         )
     })}
     </Card>

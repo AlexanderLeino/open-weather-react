@@ -5,8 +5,10 @@ import { APIKey } from "./secret";
 import moment from "moment";
 import styled from "styled-components";
 import indexCss from "./index.css";
-import { SevenDayForecast } from "./components/seven-day-forecast.js/7DayForecast";
-
+import { SevenDayForecast } from "./components/seven-day-forecast/7DayForecast";
+import { Flex } from "./components/flex";
+import useWindowDimensions from "./utils.js/getWindowDimensions";
+import { ChartCard } from "./components/card/chart-card";
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
@@ -27,7 +29,7 @@ function App() {
   const [historicalData, setHistoricalData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [previousLocations, setPreviousLocations] = useState([])
-  
+  let {width} = useWindowDimensions()
   const checkPreviousLocations = (location) => {
     if(!weatherResults) return
     let foundLocation = previousLocations.findIndex((weather) => weather.name === weatherResults.name)
@@ -70,10 +72,11 @@ function App() {
     let { lat, lon, name, state, country } = obj;
     let key = `${name}-${state}-${country}`;
     let localStorageData = checkLocalStorage(key);
-    checkPreviousLocations(localStorage)
+    checkPreviousLocations(localStorageData)
     if (localStorageData) return;
 
     try {
+      console.log('API IS BEING CALLED')
       let response = await fetch(
         `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&&units=imperial&appid=${APIKey}`
       );
@@ -83,48 +86,49 @@ function App() {
       let obj = { data, name, state, country, lat, lon };
       let stringifiedData = JSON.stringify(obj);
       localStorage.setItem(resultKey, stringifiedData);
+      
       checkPreviousLocations(data)
     } catch (e) {
       console.log(e);
     }
   };
 
-  const getHistoricalData = async (obj) => {
-    if (!obj) return;
+  // const getHistoricalData = async (obj) => {
+  //   if (!obj) return;
 
-    let infoArray = [];
-    for (let i = 0; i < 11; i++) {
-      let {
-        lat,
-        lon,
-        data,
-      } = obj;
+  //   let infoArray = [];
+  //   for (let i = 0; i < 11; i++) {
+  //     let {
+  //       lat,
+  //       lon,
+  //       data,
+  //     } = obj;
       
-      let timeStamp = moment
-        .utc(data?.current?.dt, "X")
-        .add(data?.timezone_offset, "seconds")
-        .subtract(i, "years")
-        .format('YYYY')
-      let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
-      let response = await fetch(
-        `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
-      );
+  //     let timeStamp = moment
+  //       .utc(data?.current?.dt, "X")
+  //       .add(data?.timezone_offset, "seconds")
+  //       .subtract(i, "years")
+  //       .format('YYYY')
+  //     let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
+  //     let response = await fetch(
+  //       `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
+  //     );
 
-      let foundData = await response.json();
-      console.log("foundData", foundData)
-      infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
-    }
+  //     let foundData = await response.json();
+  //     console.log("foundData", foundData)
+  //     infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
+  //   }
 
-    setHistoricalData({
-      labels: infoArray.map((data) => data.date),
-      datasets: [
-        {
-          label: "Temperature",
-          data: infoArray.map((data) => data.weather.temp),
-        },
-      ],
-    });
-  };
+  //   setHistoricalData({
+  //     labels: infoArray.map((data) => data.timeStamp),
+  //     datasets: [
+  //       {
+  //         label: "Temperature",
+  //         data: infoArray.map((data) => data.weather.temp),
+  //       },
+  //     ],
+  //   });
+  // };
 
   const getHourlyData = async (obj) => {
     let filterData = obj?.data?.hourly?.slice(23);
@@ -143,26 +147,25 @@ function App() {
         {
           label: "Temperature",
           data: filterData?.map((hourlyData) => hourlyData?.temp),
+          backgroundColor: 'darkBlue', borderColor: 'darkBlue'
         },
       ],
     });
   };
 
- 
-  useEffect(() => {
-    console.log(previousLocations)
-  }, [previousLocations])
   let currentData = weatherResults?.data?.current;
-
+  
   let fullDate = moment
     .utc(currentData?.dt, "X")
-    .add(weatherResults?.timezone_offset, "seconds")
+    .add(weatherResults?.data?.timezone_offset, "seconds")
     .format("dddd, MMMM YYYY hh:mm a");
 
   let currentTime = moment
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
     .format("hh:mm a");
+
+    console.log('Current Time', currentTime)
   let sunRise = moment
     .utc(currentData?.sunrise, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -173,14 +176,16 @@ function App() {
     .format("hh:mm a");
 
   useEffect(() => {
-    let currentTimeFormat = moment(currentTime, "HH:mm a");
-    let sunSetTimeFormat = moment(sunSet, "HH:mm a");
-    if (currentTimeFormat > sunSetTimeFormat) {
+    let currentTimeFormat = moment(currentTime, "HH:mm a").add(weatherResults?.data?.timezone_offset, 'seconds')
+    let sunSetTimeFormat = moment(sunSet, "HH:mm a").add(weatherResults?.data?.timezone_offset, 'seconds')
+
+    if (Date.parse(currentTimeFormat) > Date.parse(sunSetTimeFormat)) {
       setTimeOfDay("night");
     } else {
+      console.log('Day Time')
       setTimeOfDay("day");
     }
-    getHistoricalData(weatherResults);
+    // getHistoricalData(weatherResults)
     getHourlyData(weatherResults);
   }, [weatherResults]);
  
@@ -189,7 +194,7 @@ function App() {
     let parsedItem = JSON.parse(localItem);
 
     if (parsedItem) {
-      console.log("parseITEM", parsedItem);
+ 
       let { data, name, state, country } = parsedItem;
       let lon = data?.lon;
       let lat = data?.lat;
@@ -200,6 +205,12 @@ function App() {
     }
   };
 
+  const CardContainer = styled(Flex)`
+  @media (max-width: 1550px){
+    margin-top: 15px;
+  }
+
+`
 
   return (
     <>
@@ -212,6 +223,7 @@ function App() {
           results={weatherResults}
           allGeoLocations={allGeoLocations}
         />
+  
       </AppContainer>
       <AppContainer>
         <CurrentWeatherContainer
@@ -226,11 +238,18 @@ function App() {
           hourlyTemp={hourlyData}
           fullDate={fullDate}
           previousLocations={previousLocations}
+          setCityName={setCityName}
         />
       </AppContainer>
-      <AppContainer margin={"20px 0px 0px 0px"}>
+    <Flex justifyContent='center'>
+      {width <= 619 
+      && <CardContainer flexGrow={1}>
+        <ChartCard historicalData={historicalData} hourlyTemp={hourlyData} />
+      </CardContainer>}
+    </Flex>
+      
         <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
-      </AppContainer>
+      
     </>
   );
 }

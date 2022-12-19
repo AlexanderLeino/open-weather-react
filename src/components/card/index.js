@@ -22,12 +22,20 @@ const CardContainer = styled.div`
   padding: ${({ padding }) => (padding ? padding : "0px")};
   margin: ${({ margin }) => (margin ? margin : "0")};
   flex-wrap: wrap;
-  flex-grow: 1;
+  flex-grow: ${({flexGrow}) => flexGrow ? flexGrow : 1};
   flex-shrink: 1;
   height: ${({height}) => height ? height : 'auto'};
   z-index: ${({ zIndex }) => (zIndex ? zIndex : "0")};
   box-shadow: ${({ boxShadow }) =>
     boxShadow ? boxShadow : "none"};
+  background-image: ${({backgroundImage}) => backgroundImage ? `url(${backgroundImage})` : 'none'};
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-color: ${({backgroundColor}) => backgroundColor ? backgroundColor : 'none'};  
+  background-blend-mode: multiply;
+  
+ 
 `;
 
 const Card = (props) => {

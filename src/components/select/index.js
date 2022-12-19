@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { BsFillTriangleFill } from "react-icons/bs";
-
 const StyledSelect = styled.select`
   background: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "#f5f5f5"};
@@ -13,7 +12,7 @@ const StyledSelect = styled.select`
     borderRadius ? `${borderRadius}px` : 0};
   -ms-border-radius: ${({ borderRadius }) =>
     borderRadius ? `${borderRadius}px` : 0};
-  padding: ${({ padding }) => (padding ? padding : "10px")};
+  padding: ${({ padding }) => (padding ? padding : "0px 10px 0px 0px")};
   width: ${({ width }) => (width ? width : "100%")};
   max-width: 100%;
   appearance: none;
@@ -24,6 +23,7 @@ const StyledSelect = styled.select`
   font-size: ${({ fontSize }) => (fontSize ? fontSize : ".85rem")};
   font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : null)};
   white-space: nowrap;
+ 
   &:focus {
     outline: none !important;
   }
@@ -57,7 +57,6 @@ const TriangleContainer = styled.span`
     triangleDisplay ? triangleDisplay : "inline"};
   position: relative;
   top: ${({ triangleTop }) => (triangleTop ? triangleTop : '-5px')};
-  left: ${({ triangleLeft }) => (triangleLeft ? triangleLeft : "-50px")};
   right: ${({ triangleRight }) => (triangleRight ? triangleRight : 0)};
   bottom: ${({ triangleBottom }) => (triangleBottom ? triangleBottom : 0)};
   transform: rotate(180deg);
@@ -96,6 +95,8 @@ const Select = ({
   width,
   ...props
 }) => {
+
+
   return (
     <>
       <SelectContainer fullWidth={fullWidth} margin={margin}>
@@ -116,7 +117,6 @@ const Select = ({
           onChange={onChange}
           type={type}
           width={width}
-          // required={props.required}
         >
           {children}
         </StyledSelect>

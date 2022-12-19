@@ -1,28 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Card from ".";
 import { Flex } from "../flex";
 import { BsUmbrellaFill } from "react-icons/bs";
 import { WeatherIconSwitch } from "../../utils.js/weatherIcons";
-import Select from "../select";
+import getBackgroundStyling from "../../utils.js/currentWeatherCardSwitch";
+import useWindowDimensions from "../../utils.js/getWindowDimensions";
 const Text = styled.div`
+  color: ${({ color }) => (color ? color : "black")};
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "20px")};
   text-transform: ${({ capitalize }) => (capitalize ? capitalize : null)};
   font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : "none")};
-  margin-top: -10px;
-`;
-const Title = styled.div`
-  margin-top: 10px;
-  font-size: 25px;
-  margin-left: 10px;
-  font-weight: bold;
+  margin: ${({ margin }) => (margin ? margin : "0px")};
 `;
 
+const SecondaryWeatherContainer = styled(Card)`
+  @media(max-width: 615px){
+    width: fit-content;
+  }
+
+
+`
+
+const DescriptionCard = styled(Flex)`
+  @media(max-width: 412px){
+    width: 250px;
+    align-items: center;
+  }
+
+
+
+`
+
 export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
+  const {width} = useWindowDimensions()
+  const [cardStyling, setCardStyling] = useState({});
+  
+  useEffect(() => {
+    if (currentData === undefined) return;
+    getBackgroundStyling(
+      currentData.weather[0].description,
+      timeOfday,
+      setCardStyling
+    );
+  }, [currentData]);
+
+  //TODO: Rainy Day numbers needed to be adjusted appropriately
   return (
-    <Card
-      backgroundColor="lightBlue"
-      width={"auto"}
+    <SecondaryWeatherContainer
+      
       height="auto"
       borderRadius=".375rem"
       boxShadow={
@@ -30,31 +56,96 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
       }
       border={"1px solid black"}
       padding="15px"
+      justifyContent="space-between"
+      backgroundImage={cardStyling?.img}
+      backgroundColor={"rgba(191, 191, 191, 0.5)"}
+      width='500px'
     >
-      <span style={{ fontSize: "75px", marginRight: "10px" }}>
-        {WeatherIconSwitch(
-          currentData?.weather[0].description,
-          timeOfday,
-          false
-        )}
-      </span>
-      <div>Feels Like: {currentData?.feels_like}</div>
-      <div>High:{results?.daily[0]?.temp.max}</div>
-      <div>Low: {results?.daily[0]?.temp.min}</div>
-      <Text fontSize={"40px"}>
-        {currentData?.temp.toFixed(0)}
-        <span>&#176;</span>F
-      </Text>
-
-      <Text capitalize={"capitalize"}>
-        {currentData?.weather[0].description}
-      </Text>
-      {results && (
-        <Flex justifyContent="center">
-          <BsUmbrellaFill />
-          <div>{results?.daily[0].pop * 100}%</div> Chance Of Percipitation
+      <Flex justifyContent="space-between" width="100%" alignItems="center">
+        <Text fontSize={"35px"} fontWeight="bold" color={cardStyling?.color}>
+          {currentData?.temp.toFixed(0)}
+          <span>&#176;</span>F
+        </Text>
+        <Flex justifyContent="space-between" alignItems="center" width="130px">
+          <Flex flexDirection="column" alignItems="flex-start">
+            <Text fontWeight="bold" color={cardStyling?.color}>
+              High:
+            </Text>
+            <Text fontWeight="bold" color={cardStyling?.color}>
+              Low:
+            </Text>
+          </Flex>
+          <Flex flexDirection="column" alignItems="flex-start">
+            <Text color={cardStyling?.color} fontWeight="bold">
+              {results?.daily[0]?.temp?.max}
+              <span>&#176;F</span>
+            </Text>
+            <Text color={cardStyling?.color} fontWeight="bold">
+              {results?.daily[0]?.temp?.min}
+              <span>&#176;F</span>
+            </Text>
+          </Flex>
         </Flex>
-      )}
-    </Card>
+      </Flex>
+
+      <Flex width="100%">
+        <DescriptionCard
+          flexDirection="column"
+          alignItems="flex-start"
+          justifyContent="center"
+          flexGrow={1}
+        >
+        {width <= 412 
+        && <Flex>
+          <span style={{ fontSize: "75px", color: cardStyling.color, marginTop: '10px' }}>
+            {WeatherIconSwitch(
+              currentData?.weather[0].description,
+              timeOfday,
+              false
+            )}
+          </span>
+        </Flex>}
+          <Text
+            capitalize={"capitalize"}
+            fontWeight="bold"
+            color={cardStyling.color}
+          >
+            {currentData?.weather[0].description}
+          </Text>
+          <Text
+            color={cardStyling?.color}
+            fontWeight="bold"
+            margin={"5px 0px 0px 0px"}
+          >
+            Feels Like: {currentData?.feels_like}
+            <span>&#176;F</span>
+          </Text>
+          <Flex
+            justifyContent="center"
+            margin="5px 0px 0px 0px"
+            alignItems={"center"}
+          >
+            <BsUmbrellaFill style={{ fontSize: "20px", color: cardStyling.color, marginRight: '10px' }} />
+            <Text fontWeight={"bold"} color={cardStyling?.color}>
+              {results?.daily?.[0]?.pop * 100}%
+            </Text>
+            <Text color={cardStyling?.color} fontWeight="bold" style={{marginLeft: '5px'}}>
+              Chance Of Percipitation
+            </Text>
+          </Flex>
+        </DescriptionCard>
+        {width >= 412 
+        && <Flex>
+          <span style={{ fontSize: "75px", color: cardStyling.color }}>
+            {WeatherIconSwitch(
+              currentData?.weather[0].description,
+              timeOfday,
+              false
+            )}
+          </span>
+        </Flex>}
+        
+      </Flex>
+    </SecondaryWeatherContainer>
   );
 };
