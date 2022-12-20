@@ -10,13 +10,13 @@ import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
 
 let localStorage = window.localStorage;
-let APIKey = "150d9c1f375394f86f0db3805c9299fb"
+let APIKey = "150d9c1f375394f86f0db3805c9299fb";
 const AppContainer = styled.div`
   background-color: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "#fcfcfc"};
   border-radius: 20px;
   padding: 15px;
-  border: ${({border}) => border ? border : '1px solid white'};
+  border: ${({ border }) => (border ? border : "1px solid white")};
   margin: ${({ margin }) => (margin ? margin : "0px")};
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
@@ -29,31 +29,37 @@ function App() {
   const [timeOfday, setTimeOfDay] = useState("");
   const [historicalData, setHistoricalData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
-  const [previousLocations, setPreviousLocations] = useState([])
-  let {width} = useWindowDimensions()
+  const [previousLocations, setPreviousLocations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  let { width } = useWindowDimensions();
 
   useEffect(() => {
-    console.log('City Name', cityName)
-    getGeoCoordinates()
-  }, [])
+    getGeoCoordinates();
+  }, []);
 
   const checkPreviousLocations = (location) => {
-    if(!weatherResults) return
-    let foundLocation = previousLocations.findIndex((weather) => weather.name === weatherResults.name)
-    if(foundLocation || foundLocation === 0){
-      let copiedState = previousLocations
-      copiedState[foundLocation] = weatherResults
-      setPreviousLocations(copiedState)
-    } 
-    
-    if(foundLocation === -1){
-      setPreviousLocations([...previousLocations, weatherResults])
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    if (!weatherResults) return;
+    let foundLocation = previousLocations.findIndex(
+      (weather) => weather.name === weatherResults.name
+    );
+    if (foundLocation || foundLocation === 0) {
+      let copiedState = previousLocations;
+      copiedState[foundLocation] = weatherResults;
+      setPreviousLocations(copiedState);
+    }
+
+    if (foundLocation === -1) {
+      setPreviousLocations([...previousLocations, weatherResults]);
     }
     
-  }
+  };
   const getGeoCoordinates = async (e) => {
+    setIsLoading(true);
     try {
-      if(e === undefined){
+      if (e === undefined) {
         let response = await fetch(
           `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
         );
@@ -77,9 +83,10 @@ function App() {
           getWeatherData(data[0]);
         }
       }
-      
     } catch (e) {
       console.log(e);
+      getGeoCoordinates('New York')
+      setIsLoading(false);
     }
   };
 
@@ -93,11 +100,11 @@ function App() {
     let { lat, lon, name, state, country } = obj;
     let key = `${name}-${state}-${country}`;
     let localStorageData = checkLocalStorage(key);
-    checkPreviousLocations(localStorageData)
+    checkPreviousLocations(localStorageData);
     if (localStorageData) return;
 
     try {
-      console.log('API IS BEING CALLED')
+      console.log("API IS BEING CALLED");
       let response = await fetch(
         `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&&units=imperial&appid=${APIKey}`
       );
@@ -107,14 +114,18 @@ function App() {
       let obj = { data, name, state, country, lat, lon };
       let stringifiedData = JSON.stringify(obj);
       localStorage.setItem(resultKey, stringifiedData);
-      
-      checkPreviousLocations(data)
+
+      checkPreviousLocations(data);
     } catch (e) {
+      getGeoCoordinates('New York')
       console.log(e);
+    } finally {
+      
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   };
-
-
 
   const getHistoricalData = async (obj) => {
     if (!obj) return;
@@ -126,7 +137,7 @@ function App() {
         lon,
         data,
       } = obj;
-      
+
       let timeStamp = moment
         .utc(data?.current?.dt, "X")
         .add(data?.timezone_offset, "seconds")
@@ -171,14 +182,15 @@ function App() {
         {
           label: "Temperature",
           data: filterData?.map((hourlyData) => hourlyData?.temp),
-          backgroundColor: 'darkBlue', borderColor: 'darkBlue'
+          backgroundColor: "darkBlue",
+          borderColor: "darkBlue",
         },
       ],
     });
   };
 
   let currentData = weatherResults?.data?.current;
-  
+
   let fullDate = moment
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -189,7 +201,7 @@ function App() {
     .add(weatherResults?.data?.timezone_offset, "seconds")
     .format("hh:mm a");
 
-    console.log('Current Time', currentTime)
+  console.log("Current Time", currentTime);
   let sunRise = moment
     .utc(currentData?.sunrise, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
@@ -200,25 +212,30 @@ function App() {
     .format("hh:mm a");
 
   useEffect(() => {
-    let currentTimeFormat = moment(currentTime, "HH:mm a").add(weatherResults?.data?.timezone_offset, 'seconds')
-    let sunSetTimeFormat = moment(sunSet, "HH:mm a").add(weatherResults?.data?.timezone_offset, 'seconds')
+    let currentTimeFormat = moment(currentTime, "HH:mm a").add(
+      weatherResults?.data?.timezone_offset,
+      "seconds"
+    );
+    let sunSetTimeFormat = moment(sunSet, "HH:mm a").add(
+      weatherResults?.data?.timezone_offset,
+      "seconds"
+    );
 
     if (Date.parse(currentTimeFormat) > Date.parse(sunSetTimeFormat)) {
       setTimeOfDay("night");
     } else {
-      console.log('Day Time')
+      console.log("Day Time");
       setTimeOfDay("day");
     }
     getHistoricalData(weatherResults)
     getHourlyData(weatherResults);
   }, [weatherResults]);
- 
+
   const checkLocalStorage = (key) => {
     let localItem = localStorage.getItem(key);
     let parsedItem = JSON.parse(localItem);
 
     if (parsedItem) {
- 
       let { data, name, state, country } = parsedItem;
       let lon = data?.lon;
       let lat = data?.lat;
@@ -230,14 +247,19 @@ function App() {
   };
 
   const CardContainer = styled(Flex)`
-  @media (max-width: 1550px){
-    margin-top: 15px;
-  }
-`
-  return (
-    <> 
+    @media (max-width: 1550px) {
+      margin-top: 15px;
+    }
+  `;
+  console.log("isLoading", isLoading);
 
-      <AppContainer backgroundColor='#313335' border='1px solid white' margin={'0px 0px 20px 0px'}>
+  return (
+    <>
+      <AppContainer
+        backgroundColor="#313335"
+        border="1px solid white"
+        margin={"0px 0px 20px 0px"}
+      >
         <NavBar
           setCityName={setCityName}
           getGeoCoordinates={getGeoCoordinates}
@@ -246,33 +268,48 @@ function App() {
           results={weatherResults}
           allGeoLocations={allGeoLocations}
         />
-  
       </AppContainer>
-      <AppContainer backgroundColor='#313335' border='1px solid white'>
-        <CurrentWeatherContainer
-          data={weatherResults}
-          sunRise={sunRise}
-          sunSet={sunSet}
-          timeOfday={timeOfday}
-          currentTime={currentTime}
-          allGeoLocations={allGeoLocations}
-          getWeatherData={getWeatherData}
-          historicalData={historicalData}
-          hourlyTemp={hourlyData}
-          fullDate={fullDate}
-          previousLocations={previousLocations}
-          setCityName={setCityName}
-        />
-      </AppContainer>
-    <Flex justifyContent='center'>
-      {width <= 619 
-      && <CardContainer flexGrow={1}>
-        <ChartCard historicalData={historicalData} hourlyTemp={hourlyData} />
-      </CardContainer>}
-    </Flex>
-      <AppContainer backgroundColor='#313335' border='1px solid white' margin={'20px 0px 0px 0px'}>
-        <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
-      </AppContainer>
+      {isLoading ? (
+        <Flex alignItems="center" justifyContent='center'>
+          <div style={{color: 'white', fontSize: '40px', fontWeight: 'bold'}}>Loading...</div>
+        </Flex>
+      ) : (
+        <>
+          <AppContainer backgroundColor="#313335" border="1px solid white">
+            <CurrentWeatherContainer
+              data={weatherResults}
+              sunRise={sunRise}
+              sunSet={sunSet}
+              timeOfday={timeOfday}
+              currentTime={currentTime}
+              allGeoLocations={allGeoLocations}
+              getWeatherData={getWeatherData}
+              historicalData={historicalData}
+              hourlyTemp={hourlyData}
+              fullDate={fullDate}
+              previousLocations={previousLocations}
+              setCityName={setCityName}
+            />
+          </AppContainer>
+          <Flex justifyContent="center">
+            {width <= 619 && (
+              <CardContainer flexGrow={1}>
+                <ChartCard
+                  historicalData={historicalData}
+                  hourlyTemp={hourlyData}
+                />
+              </CardContainer>
+            )}
+          </Flex>
+          <AppContainer
+            backgroundColor="#313335"
+            border="1px solid white"
+            margin={"20px 0px 0px 0px"}
+          >
+            <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
+          </AppContainer>
+        </>
+      )}
     </>
   );
 }
