@@ -55,7 +55,7 @@ function App() {
     try {
       if(e === undefined){
         let response = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
         );
         let data = await response.json();
         if (data) {
@@ -67,7 +67,7 @@ function App() {
       } else {
         e.preventDefault();
         let response = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
         );
         let data = await response.json();
         if (data) {
