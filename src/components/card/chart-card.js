@@ -22,7 +22,7 @@ import { Chart } from "chart.js";
     
   
   `
-export const ChartCard = ({historicalData = fakeData, hourlyTemp}) => {
+export const ChartCard = ({historicalData, hourlyTemp}) => {
 
   const [selectedView, setSelectedView] = useState("hourlyTemp");
   const handleOnClick = (e) => {
@@ -44,7 +44,7 @@ export const ChartCard = ({historicalData = fakeData, hourlyTemp}) => {
 
     >
       {selectedView === "historical" ? (
-        <LineChart chartData={fakeData}/>
+        <LineChart chartData={historicalData}/>
       ) : (
         <LineChart chartData={hourlyTemp}/>
       )}
