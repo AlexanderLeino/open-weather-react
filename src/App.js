@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavBar } from "./components/navbar";
 import { CurrentWeatherContainer } from "./components/CurrentWeatherContainer";
-import { APIKey } from "./secret";
 import moment from "moment";
 import styled from "styled-components";
 import indexCss from "./index.css";
@@ -11,7 +10,7 @@ import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
 
 let localStorage = window.localStorage;
-
+let APIKey = "150d9c1f375394f86f0db3805c9299fb"
 const AppContainer = styled.div`
   background-color: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "#fcfcfc"};
