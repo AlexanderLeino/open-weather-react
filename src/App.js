@@ -148,6 +148,7 @@ function App() {
         {
           label: "Temperature",
           data: infoArray.map((data) => data.weather.temp),
+          backgroundColor: 'darkBlue', borderColor: 'darkBlue'
         },
       ],
     });
