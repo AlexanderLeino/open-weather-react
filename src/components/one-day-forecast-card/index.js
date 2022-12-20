@@ -10,11 +10,13 @@ import { border } from "polished";
 const CapitalizedText = styled.div`
   text-transform: capitalize;
   font-size: 20px;
-  white-space: nowrap;
+  text-align: center;
+  margin-top: -12px;
 `;
 
 const OneDayCard = styled(Flex)`
   @media (min-width: 1235px) {
+    white-space: normal;
     width: 200px;
     min-width: 200px;
   }
@@ -42,11 +44,11 @@ export const OneDayForecastCard = ({ index, dataForDay, timeOfDay }) => {
       flexDirection="column"
       width="150px"
       key={index}
-      border="1px solid black"
+      border="3px solid white"
       borderRadius="20px"
       justifyContent="center"
       alignItems="center"
-      backgroundColor="#e2f3ff"
+      backgroundColor="#8ca2b2"
       boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"
       padding={"10px"}
       margin={"0px 10px 0px 10px"}
@@ -59,26 +61,24 @@ export const OneDayForecastCard = ({ index, dataForDay, timeOfDay }) => {
       </div>
       <Flex flexDirection="column" alignItems="center" justifyContent="space-between" width='100%'>
         <Flex flexDirection="column" alignItems="center">
-          <span style={{ fontSize: "50px" }}>
             {WeatherIconSwitch(
               dataForDay?.weather[0].description,
               timeOfDay,
               true
             )}
-          </span>
           <CapitalizedText>
             {dataForDay?.weather[0].description}
           </CapitalizedText>
         </Flex>
 
         <Flex justifyContent="center">
-          <div style={{ fontSize: "25px", fontWeight: "bold" }}>
+          <div style={{ fontSize: "25px", fontWeight: "bold", marginTop: '10px'}}>
             {dataForDay.temp.day}
             <span>&#176;</span>F
           </div>
         </Flex>
-        <Flex justifyContent="center">
-        {!isExpanded 
+        {/* <Flex justifyContent="center"> */}
+        {/* {!isExpanded 
         && <Button
             backgroundColor="white"
             borderRadius="25px"
@@ -129,7 +129,7 @@ export const OneDayForecastCard = ({ index, dataForDay, timeOfDay }) => {
               <div>{(dataForDay.rain / 25).toFixed(2)} in</div>
             </Flex>
           ) : null}
-        </SecondaryDetails>
+        </SecondaryDetails> */}
       </Flex>
     </OneDayCard>
   );

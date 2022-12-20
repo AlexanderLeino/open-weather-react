@@ -7,6 +7,9 @@ import { Flex } from "../flex";
 import Card from "./";
 import { degToCompass } from "../../utils.js/degreesToCompass";
 import {TiWaves} from 'react-icons/ti'
+import SunRiseImg from '../../asset/weather-icons-master/production/fill/all/sunrise.svg'
+import SunSetImg from '../../asset/weather-icons-master/production/fill/all/sunset.svg'
+import getUVIndex from "../../utils.js/getUVIndex";
 
 const Text = styled.div`
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "20px")};
@@ -38,7 +41,7 @@ export const SecondaryWeatherCard = ({
   console.log('CurrentData', currentData)
   return (
     <Card
-      backgroundColor="#e2f3ff"
+      backgroundColor="#ebebeb"
       height="fit-content"
       borderRadius=".375rem"
       boxShadow={
@@ -57,10 +60,7 @@ export const SecondaryWeatherCard = ({
         className="sunRise"
         borderBottom="1px solid lightGrey"
       >
-        <i
-          className="wi wi-miscellaneous wi-sunrise"
-          style={{ textAlign: "left", fontSize: "35px", color: "black" }}
-        ></i>
+        <img src={SunRiseImg} height='100px'/>
         <TitleText>{sunRise}</TitleText>
       </Flex>
       <Flex
@@ -72,10 +72,7 @@ export const SecondaryWeatherCard = ({
         height="75px"
         borderBottom="1px solid lightGrey"
       >
-        <i
-          className="wi wi-miscellaneous wi-sunset"
-          style={{ textAlign: "left", fontSize: "35px", color: 'black'}}
-        ></i>
+        <img src={SunSetImg} height='100px'/>
         <TitleText>{sunSet}</TitleText>
       </Flex>
       <Flex margin={"25px 0px 0px 0px"}>
@@ -85,7 +82,7 @@ export const SecondaryWeatherCard = ({
           </Text>
           <Flex alignItems={"center"}>
             <Text fontSize="20px">{currentData?.dew_point}</Text>
-            <BsFillDropletFill fontSize="20px" style={{marginLeft: '10px'}} />
+            <BsFillDropletFill fontSize="20px" style={{marginLeft: '10px', color:'#2b69fd'}} />
           </Flex>
         </Tile>
         <Tile>
@@ -105,24 +102,22 @@ export const SecondaryWeatherCard = ({
           <Text fontWeight="bold">Wind</Text>
           <Flex alignItems="center">
             <Text>{currentData?.wind_speed} MPH</Text>
-            <span style={{marginLeft: '10px'}}>
               {degToCompass(currentData?.wind_deg)}
-            </span>
           </Flex>
         </Tile>
         <Tile>
           <Text fontWeight="bold">Humidity</Text>
           <Flex alignItems={"center"}>
             <Text>{currentData?.humidity}%</Text>
-            <WiHumidity style={{ fontSize: "28px", marginLeft: '5px' }} />
+            <WiHumidity style={{ fontSize: "35px", marginLeft: '5px', color:"#2b69fd" }} />
           </Flex>
         </Tile>
       </Flex>
           <Tile justifyContent='space-between' width='100%'>
               <Text fontWeight='bold'>UV Index</Text>
-              <Flex>
+              <Flex alignItems='center'>
               <Text>{currentData?.uvi}</Text>
-              <TiWaves fontSize='28px'/>
+              {getUVIndex(currentData?.uvi)}
               </Flex>
           </Tile>
     </Card>

@@ -58,7 +58,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
       padding="15px"
       justifyContent="space-between"
       backgroundImage={cardStyling?.img}
-      backgroundColor={"rgba(191, 191, 191, 0.5)"}
+      backgroundColor={"#dfdfdf"}
       width='500px'
     >
       <Flex justifyContent="space-between" width="100%" alignItems="center">
@@ -88,7 +88,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
         </Flex>
       </Flex>
 
-      <Flex width="100%">
+      <Flex width="100%" style={{position: 'relative', top: '40px'}}>
         <DescriptionCard
           flexDirection="column"
           alignItems="flex-start"
@@ -97,13 +97,11 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
         >
         {width <= 412 
         && <Flex>
-          <span style={{ fontSize: "75px", color: cardStyling.color, marginTop: '10px' }}>
             {WeatherIconSwitch(
               currentData?.weather[0].description,
               timeOfday,
               false
             )}
-          </span>
         </Flex>}
           <Text
             capitalize={"capitalize"}

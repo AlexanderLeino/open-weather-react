@@ -9,6 +9,7 @@ import { SevenDayForecast } from "./components/seven-day-forecast/7DayForecast";
 import { Flex } from "./components/flex";
 import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
+
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
@@ -16,13 +17,14 @@ const AppContainer = styled.div`
     backgroundColor ? backgroundColor : "#fcfcfc"};
   border-radius: 20px;
   padding: 15px;
+  border: ${({border}) => border ? border : '1px solid white'};
   margin: ${({ margin }) => (margin ? margin : "0px")};
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 `;
 
 function App() {
-  const [cityName, setCityName] = useState("Kalamazoo");
+  const [cityName, setCityName] = useState("New York");
   const [allGeoLocations, setAllGeoLocations] = useState([]);
   const [weatherResults, setWeatherResults] = useState("");
   const [timeOfday, setTimeOfDay] = useState("");
@@ -30,6 +32,12 @@ function App() {
   const [hourlyData, setHourlyData] = useState([]);
   const [previousLocations, setPreviousLocations] = useState([])
   let {width} = useWindowDimensions()
+
+  useEffect(() => {
+    console.log('City Name', cityName)
+    getGeoCoordinates()
+  }, [])
+
   const checkPreviousLocations = (location) => {
     if(!weatherResults) return
     let foundLocation = previousLocations.findIndex((weather) => weather.name === weatherResults.name)
@@ -46,17 +54,31 @@ function App() {
   }
   const getGeoCoordinates = async (e) => {
     try {
-      e.preventDefault();
-      let response = await fetch(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
-      );
-      let data = await response.json();
-      if (data) {
-        setAllGeoLocations(data);
+      if(e === undefined){
+        let response = await fetch(
+          `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
+        );
+        let data = await response.json();
+        if (data) {
+          setAllGeoLocations(data);
+        }
+        if (data) {
+          getWeatherData(data[0]);
+        }
+      } else {
+        e.preventDefault();
+        let response = await fetch(
+          `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${APIKey}`
+        );
+        let data = await response.json();
+        if (data) {
+          setAllGeoLocations(data);
+        }
+        if (data) {
+          getWeatherData(data[0]);
+        }
       }
-      if (data) {
-        getWeatherData(data[0]);
-      }
+      
     } catch (e) {
       console.log(e);
     }
@@ -92,6 +114,8 @@ function App() {
       console.log(e);
     }
   };
+
+
 
   // const getHistoricalData = async (obj) => {
   //   if (!obj) return;
@@ -209,12 +233,11 @@ function App() {
   @media (max-width: 1550px){
     margin-top: 15px;
   }
-
 `
-
   return (
-    <>
-      <AppContainer margin={'0px 0px 20px 0px'}>
+    <> 
+
+      <AppContainer backgroundColor='#313335' border='1px solid white' margin={'0px 0px 20px 0px'}>
         <NavBar
           setCityName={setCityName}
           getGeoCoordinates={getGeoCoordinates}
@@ -225,7 +248,7 @@ function App() {
         />
   
       </AppContainer>
-      <AppContainer>
+      <AppContainer backgroundColor='#313335' border='1px solid white'>
         <CurrentWeatherContainer
           data={weatherResults}
           sunRise={sunRise}
@@ -247,7 +270,9 @@ function App() {
         <ChartCard historicalData={historicalData} hourlyTemp={hourlyData} />
       </CardContainer>}
     </Flex>
+      <AppContainer backgroundColor='#313335' border='1px solid white' margin={'20px 0px 0px 0px'}>
         <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
+      </AppContainer>
     </>
   );
 }

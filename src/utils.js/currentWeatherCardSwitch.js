@@ -57,7 +57,7 @@ const daySwitch = (weather, setCardStyling) => {
       });
       break;
     default:
-      setCardStyling({ color: "black", img: clouds });
+      setCardStyling({ color: "white", img: clouds });
       break;
   }
 };

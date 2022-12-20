@@ -33,7 +33,7 @@ export const ChartCard = ({historicalData = fakeData, hourlyTemp}) => {
 
   return (
     <ChartCardContainer
-      backgroundColor="#ADBCE6"
+      backgroundColor="#ebebeb"
       width='675px'
       border={"1px solid black"}
       borderRadius=".375rem"
@@ -48,11 +48,11 @@ export const ChartCard = ({historicalData = fakeData, hourlyTemp}) => {
       ) : (
         <LineChart chartData={hourlyTemp}/>
       )}
-      <Flex justifyContent="start" alignItems="center" margin={'5px 0px 0px 0px'} flexWrap='nowrap'>
-        <Button onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="hourlyTemp" borderRight='0px'>
+      <Flex justifyContent="start" alignItems="center" margin={'20px 0px 10px 0px'} flexWrap='nowrap'>
+        <Button hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="hourlyTemp" borderRight='0px'>
           Temp (Hourly)
         </Button>
-        <Button onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="historical">
+        <Button hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="historical">
           Historical
         </Button>
       </Flex>

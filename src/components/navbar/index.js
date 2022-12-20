@@ -4,9 +4,9 @@ import Button from '../button'
 import { Flex } from '../flex'
 import styled from 'styled-components'
 import {VscSearch} from 'react-icons/vsc'
-import './navbar.css'
 
 const NavBarContainer = styled(Flex)`
+  background-color: #313335;
   @media(max-width: 629px){
     height: 100px;
     justify-content: center;
@@ -15,6 +15,7 @@ const NavBarContainer = styled(Flex)`
 const Title = styled.div`
   font-weight: bold;
   font-size: 30px;
+  color: white;
   @media(max-width: 360px){
     font-size: 28px;
   }

@@ -70,24 +70,25 @@ export const CurrentWeatherContainer = ({
 
   return (
     <>
-    <Flex flexDirection="column" alignItems="flex-start">
+    <Flex flexDirection="column" alignItems="flex-start" backgroundColor='#313335'>
       <Card
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
         width="fit-content"
+        backgroundColor='#313335'
       >
-        <Flex flexDirection="column" alignItems='flex-start'>
-          <Flex alignItems="center">
+        <Flex flexDirection="column" alignItems='flex-start' backgroundColor='#313335'>
+          <Flex alignItems="center" backgroundColor='#313335'>
            
             {allGeoLocations && (
               <SelectStyled
                 margin={"0px 0px 10px 0px"}
                 onChange={handleSelectChange}
-               
+                color='white'
                 fontWeight="bold"
                 border={'none'}
-                backgroundColor="white"
+                backgroundColor="#313335"
                 width={"fit-content"}
                 triangleTop={"-2px"}
                 
@@ -106,7 +107,7 @@ export const CurrentWeatherContainer = ({
               </SelectStyled>
             )}
           </Flex>
-          <div style={{fontSize:'20px'}}>{fullDate}</div>
+          <div style={{fontSize:'20px', color: 'white'}}>{fullDate}</div>
         </Flex>
       </Card>
       <Flex  justifyContent='space-around' flexWrap='wrap' width='100%' margin='10px 0px 0px 0px'>

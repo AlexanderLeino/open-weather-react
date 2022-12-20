@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { BsFillTriangleFill } from "react-icons/bs";
 const StyledSelect = styled.select`
   background: ${({ backgroundColor }) =>
-    backgroundColor ? backgroundColor : "#f5f5f5"};
+    backgroundColor ? backgroundColor : "#313335"};
   border: ${({ border }) => (border ? border : "1px solid lightgrey")};
   border-radius: ${({ borderRadius }) =>
     borderRadius ? `${borderRadius}px` : 0};
@@ -40,12 +40,13 @@ const SelectContainer = styled.div`
   margin: ${({ margin }) => (margin ? margin : "0px")};
   white-space: nowrap;
   width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
+  
 `;
 
 const SubTitleText = styled.label`
   position: absolute;
   top: -9px;
-  background-color: white;
+  background-color: #313335 ;
   left: 12px;
   color: #a8a8a8;
   font-size: 13px;
@@ -61,7 +62,7 @@ const TriangleContainer = styled.span`
   bottom: ${({ triangleBottom }) => (triangleBottom ? triangleBottom : 0)};
   transform: rotate(180deg);
   color: ${({ triangleColor }) =>
-    triangleColor ? triangleColor : 'black'};
+    triangleColor ? triangleColor : 'white'};
   font-size: ${({ triangleSize }) => (triangleSize ? triangleSize : "10px")};
   pointer-events: none;
  

@@ -54,7 +54,7 @@ const StyledButton = styled.button`
     cursor: not-allowed;
   }
   :focus {
-    background-color: lightgrey;
+    background-color: #b5b3ee;
   }
 `;
 

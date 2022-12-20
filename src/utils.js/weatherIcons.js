@@ -1,4 +1,15 @@
 import 'weather-icons/css/weather-icons.css';
+import clearDay from '../asset/weather-icons-master/production/fill/darksky/clear-day.svg'
+import clearNight from '../asset/weather-icons-master/production/fill/darksky/clear-night.svg'
+import thunderStormDay from '../asset/weather-icons-master/production/fill/all/thunderstorms-day-rain.svg'
+import rainyDay from '../asset/weather-icons-master/production/fill/all/partly-cloudy-day-rain.svg'
+import snowDay from '../asset/weather-icons-master/production/fill/all/partly-cloudy-day-snow.svg'
+import cloudDay from '../asset/weather-icons-master/production/fill/darksky/cloudy.svg'
+import rainyNight from '../asset/weather-icons-master/production/fill/all/partly-cloudy-night-rain.svg'
+import thunderStormNight from "../asset/weather-icons-master/production/fill/all/thunderstorms-night-rain.svg"
+import snowNight from '../asset/weather-icons-master/production/fill/all/partly-cloudy-night-snow.svg'
+import cloudyNight from '../asset/weather-icons-master/production/fill/all/partly-cloudy-night.svg'
+
 export const WeatherIconSwitch = (weatherType = 'rain', timeOfDay, forSevenDayForecast = true) => {
    
     let weather
@@ -30,15 +41,15 @@ const daySwitch = (weather) => {
    
     switch(weather){
         case 'clear sky':  
-            return <i className='wi wi-daytime wi-day-sunny'></i>
+            return <img src={clearDay} alt='clear sky logo' height='150px'/>
         case 'rain': 
-            return <i className='wi wi-daytime wi-day-rain'></i>
+            return <img src={rainyDay} alt="rain logo" height="150px"/> 
         case 'thunderstorm': 
-            return <i className='wi wi-daytime wi-day-thunderstorm'></i>
+            return <img src={thunderStormDay} alt="thunder storm day logo" height="150px"/>
         case 'snow': 
-            return <i className='wi wi-neutral wi-snowflake-cold'></i>
+        return <img src={snowDay} alt="snow logo" height="150px"/>  
         default: 
-            return <i className='wi wi-daytime wi-day-cloudy'></i>
+        return <img src={cloudDay} alt="cloudy day logo" height="150px"/>    
             
     }  
 }
@@ -46,15 +57,15 @@ const daySwitch = (weather) => {
 const nightSwitch = (weather) => {
     switch(weather){
         case 'clear sky':  
-            return <i className='wi wi-nighttime wi-night-clear'></i>
+            return <img src={clearNight} alt='clear sky logo' height="150px"/>
         case 'rain': 
-            return <i className='wi wi-nighttime wi-night-alt-rain'></i>
+            return <img src={rainyNight} alt="rain logo" height="150px"/>
         case 'thunderstorm': 
-            return <i className='wi wi-nighttime wi-night-alt-thunderstorm'></i>
+            return <img src={thunderStormNight} alt="thunderstorm night logo" height="150px"/>     
         case 'snow': 
-            return <i className='wi wi-neutral wi-snowflake-cold'></i>
+        return <img src={snowNight} alt="snow night logo" height="150px"/> 
         default: 
-            return <i className='wi wi-nighttime wi-night-alt-cloudy'></i>
+            <img src={cloudyNight} alt="cloudy night logo" height="150px"/>   
             
     }  
 }
