@@ -6,7 +6,6 @@ import { WiHumidity } from "react-icons/wi";
 import { Flex } from "../flex";
 import Card from "./";
 import { degToCompass } from "../../utils.js/degreesToCompass";
-import {TiWaves} from 'react-icons/ti'
 import SunRiseImg from '../../asset/weather-icons-master/production/fill/all/sunrise.svg'
 import SunSetImg from '../../asset/weather-icons-master/production/fill/all/sunset.svg'
 import getUVIndex from "../../utils.js/getUVIndex";
@@ -36,9 +35,7 @@ export const SecondaryWeatherCard = ({
   sunSet,
   sunRise,
   currentData,
-  results,
 }) => {
-  console.log('CurrentData', currentData)
   return (
     <Card
       backgroundColor="#ebebeb"
@@ -60,7 +57,7 @@ export const SecondaryWeatherCard = ({
         className="sunRise"
         borderBottom="1px solid lightGrey"
       >
-        <img src={SunRiseImg} height='100px'/>
+        <img src={SunRiseImg} alt='A Sun logo representing the sun rising.' height='100px'/>
         <TitleText>{sunRise}</TitleText>
       </Flex>
       <Flex
@@ -72,7 +69,7 @@ export const SecondaryWeatherCard = ({
         height="75px"
         borderBottom="1px solid lightGrey"
       >
-        <img src={SunSetImg} height='100px'/>
+        <img src={SunSetImg} alt='A Sun logo representing the sun setting.' height='100px'/>
         <TitleText>{sunSet}</TitleText>
       </Flex>
       <Flex margin={"25px 0px 0px 0px"}>

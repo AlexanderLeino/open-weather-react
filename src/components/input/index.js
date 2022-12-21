@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import {VscSearch} from 'react-icons/vsc'
-import Button from "../button";
 
 const StyledInput = styled.input`
   box-shadow: none;
@@ -49,7 +47,6 @@ const Input = ({
   value,
   border,
   backgroundColor,
-  getGeoCoordinates,
 }) => {
 
   const handleInputChange = (e) => {

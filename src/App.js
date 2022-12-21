@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => {
     getGeoCoordinates();
-  }, []);
+  },[]);
 
   const checkPreviousLocations = (location) => {
     setTimeout(() => {
@@ -127,43 +127,43 @@ function App() {
     }
   };
 
-  const getHistoricalData = async (obj) => {
-    if (!obj) return;
+  // const getHistoricalData = async (obj) => {
+  //   if (!obj) return;
 
-    let infoArray = [];
-    for (let i = 0; i < 11; i++) {
-      let {
-        lat,
-        lon,
-        data,
-      } = obj;
+  //   let infoArray = [];
+  //   for (let i = 0; i < 11; i++) {
+  //     let {
+  //       lat,
+  //       lon,
+  //       data,
+  //     } = obj;
 
-      let timeStamp = moment
-        .utc(data?.current?.dt, "X")
-        .add(data?.timezone_offset, "seconds")
-        .subtract(i, "years")
-        .format('YYYY')
-      let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
-      let response = await fetch(
-        `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
-      );
+  //     let timeStamp = moment
+  //       .utc(data?.current?.dt, "X")
+  //       .add(data?.timezone_offset, "seconds")
+  //       .subtract(i, "years")
+  //       .format('YYYY')
+  //     let timeStampConvertedUnix = Date.parse(timeStamp) / 1000;
+  //     let response = await fetch(
+  //       `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timeStampConvertedUnix}&units=imperial&appid=${APIKey}`
+  //     );
 
-      let foundData = await response.json();
-      console.log("foundData", foundData)
-      infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
-    }
+  //     let foundData = await response.json();
+  //     console.log("foundData", foundData)
+  //     infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
+  //   }
 
-    setHistoricalData({
-      labels: infoArray.map((data) => data.timeStamp),
-      datasets: [
-        {
-          label: "Temperature",
-          data: infoArray.map((data) => data.weather.temp),
-          backgroundColor: 'darkBlue', borderColor: 'darkBlue'
-        },
-      ],
-    });
-  };
+  //   setHistoricalData({
+  //     labels: infoArray.map((data) => data.timeStamp),
+  //     datasets: [
+  //       {
+  //         label: "Temperature",
+  //         data: infoArray.map((data) => data.weather.temp),
+  //         backgroundColor: 'darkBlue', borderColor: 'darkBlue'
+  //       },
+  //     ],
+  //   });
+  // };
 
   const getHourlyData = async (obj) => {
     let filterData = obj?.data?.hourly?.slice(23);
@@ -227,7 +227,7 @@ function App() {
       console.log("Day Time");
       setTimeOfDay("day");
     }
-    getHistoricalData(weatherResults)
+    // getHistoricalData(weatherResults)
     getHourlyData(weatherResults);
   }, [weatherResults]);
 
@@ -245,13 +245,6 @@ function App() {
       return false;
     }
   };
-
-  const CardContainer = styled(Flex)`
-    @media (max-width: 1550px) {
-      margin-top: 15px;
-    }
-  `;
-  console.log("isLoading", isLoading);
 
   return (
     <>
@@ -293,12 +286,12 @@ function App() {
           </AppContainer>
           <Flex justifyContent="center">
             {width <= 619 && (
-              <CardContainer flexGrow={1}>
+             
                 <ChartCard
                   historicalData={historicalData}
                   hourlyTemp={hourlyData}
                 />
-              </CardContainer>
+            
             )}
           </Flex>
           <AppContainer

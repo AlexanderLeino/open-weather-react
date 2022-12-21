@@ -4,7 +4,6 @@ import clearSkies from "../images/clearSky.jpg";
 import lighting from "../images/lighting.jpg";
 import Boot from "../images/rain-day.jpg";
 import clearNightSky2 from "../images/clearnightsky-2.jpg";
-import rainyNight from "../images/rainy-night.jpg";
 import snow from "../images/snow.jpg";
 import snowNight from "../images/snow-night.jpg";
 import thunderStormDay from "../images/thunderstorm-day.jpg";

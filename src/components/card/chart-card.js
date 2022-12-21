@@ -5,7 +5,6 @@ import { Flex } from "../flex";
 import Button from "../button";
 import fakeData from "../../utils.js/fakeHistoricalData";
 import styled from "styled-components";
-import { Chart } from "chart.js";
 
   const ChartCardContainer = styled(Card)`
   @media(max-width: 768px){
@@ -44,7 +43,7 @@ export const ChartCard = ({historicalData, hourlyTemp}) => {
 
     >
       {selectedView === "historical" ? (
-        <LineChart chartData={historicalData}/>
+        <LineChart chartData={fakeData}/>
       ) : (
         <LineChart chartData={hourlyTemp}/>
       )}
