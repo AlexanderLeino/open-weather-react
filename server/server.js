@@ -1,13 +1,16 @@
 require('dotenv').config()
+const morgan = require('morgan')
 const express = require('express')
+const routes = require('./routes')
+const cors = require('cors')
 const app = express()
-const port = 3000
+const port = 3001
 
-let variable = process.env.APIKey
-console.log(variable)
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(cors());
+app.use(routes)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
