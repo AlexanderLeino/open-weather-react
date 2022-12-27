@@ -49,12 +49,12 @@ function App() {
     }
     try {
       let response = await fetch(
-        "api/getGeoCoordinates",
+        "http://localhost:3001/api/getGeoCoordinates",
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
           headers: {
-            // "Access-Control-Allow-Origin": "http://localhost:3001",
+            "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
         }
@@ -88,11 +88,11 @@ function App() {
     }
 
     try {
-      let response = await fetch("/api/getWeatherData", {
+      let response = await fetch("http://localhost:3001/api/getWeatherData", {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
-          // "Access-Control-Allow-Origin": "http://localhost:3001",
+          "Access-Control-Allow-Origin": "http://localhost:3001",
           "Content-Type": "application/json",
         },
       });
@@ -111,6 +111,7 @@ function App() {
       getGeoCoordinates("New York");
       console.log(e);
     }
+    setIsLoading(false)
   };
 
   const checkPreviousLocations = (location) => {
