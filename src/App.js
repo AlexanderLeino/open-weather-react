@@ -48,12 +48,12 @@ function App() {
     }
     try {
       let response = await fetch(
-        "http://localhost:3001/api/getGeoCoordinates",
+        "api/getGeoCoordinates",
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3001",
+            // "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
         }
@@ -87,11 +87,11 @@ function App() {
     }
 
     try {
-      let response = await fetch("http://localhost:3001/api/getWeatherData", {
+      let response = await fetch("/api/getWeatherData", {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:3001",
+          // "Access-Control-Allow-Origin": "http://localhost:3001",
           "Content-Type": "application/json",
         },
       });
@@ -143,11 +143,11 @@ function App() {
 
       let dt = Date.parse(timeStamp) / 1000;
       let response = await fetch(
-        "http://localhost:3001/api/getHistoricalData",
+        "api/getHistoricalData",
         {
           method: "POST",
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3001",
+            // "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ lat, lon, dt }),
