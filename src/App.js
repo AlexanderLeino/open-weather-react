@@ -168,6 +168,7 @@ function App() {
         },
       ],
     });
+    infoArray = []
     setIsLoading(false)
   };
 

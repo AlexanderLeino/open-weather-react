@@ -17,8 +17,7 @@ module.exports = {
 
       res.send(response.data).status(200);
     } catch (e) {
-      console.log(e);
-      res.send({ error: e }).status(400);
+        res.send({ error: e }).status(400);
     }
   },
 
@@ -36,10 +35,10 @@ module.exports = {
       };
 
       let response = await axios.request(options);
-      console.log("WEATHER REPORT", response.data);
+     
       res.send(response.data).status(200);
     } catch (e) {
-      console.log(e);
+
       res.send({ e }).status(400);
     }
   },

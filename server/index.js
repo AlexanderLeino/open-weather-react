@@ -12,6 +12,11 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(routes)
 
+let memoryUsed = process.memoryUsage()
+for (let key in memoryUsed) {
+  console.log(`Memory: ${key} ${Math.round(memoryUsed[key] / 1024 / 1024 * 100) / 100} MB`);
+}
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
