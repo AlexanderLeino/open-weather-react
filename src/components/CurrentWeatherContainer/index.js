@@ -1,7 +1,6 @@
 import React from "react";
 import { Flex } from "../flex";
 import styled from "styled-components";
-import "weather-icons/css/weather-icons.css";
 import Card from "../card";
 import Select from "../select";
 import { SecondaryWeatherCard } from "../card/secondary-weather";

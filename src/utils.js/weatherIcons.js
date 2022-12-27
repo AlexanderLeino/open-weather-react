@@ -1,4 +1,3 @@
-import 'weather-icons/css/weather-icons.css';
 import clearDay from '../asset/weather-icons-master/production/fill/darksky/clear-day.svg'
 import clearNight from '../asset/weather-icons-master/production/fill/darksky/clear-night.svg'
 import thunderStormDay from '../asset/weather-icons-master/production/fill/all/thunderstorms-day-rain.svg'
