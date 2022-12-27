@@ -9,6 +9,9 @@ import { Flex } from "./components/flex";
 import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
 
+let DEBUG = false
+
+
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
@@ -45,12 +48,12 @@ function App() {
     }
     try {
       let response = await fetch(
-        "/api/getGeoCoordinates",
+        "http://localhost:3001/api/getGeoCoordinates",
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
           headers: {
-           
+            "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
         }
@@ -73,20 +76,22 @@ function App() {
       );
       return;
     }
+    
     let { lat, lon, name, state, country } = obj;
-
-    let key = `${name}-${state}-${country}`;
-    let localStorageData = checkLocalStorage(key);
-    checkPreviousLocations(localStorageData);
-    if (localStorageData) return;
+    
+    if(DEBUG){
+      let key = `${name}-${state}-${country}`;
+      let localStorageData = checkLocalStorage(key);
+      checkPreviousLocations(localStorageData);
+      if (localStorageData) return;
+    }
 
     try {
-      console.log("API IS BEING CALLED", lat, lon);
-      let response = await fetch("/api/getWeatherData", {
+      let response = await fetch("http://localhost:3001/api/getWeatherData", {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
-          // "Access-Control-Allow-Origin": "http://localhost:3001",
+          "Access-Control-Allow-Origin": "http://localhost:3001",
           "Content-Type": "application/json",
         },
       });
@@ -95,8 +100,12 @@ function App() {
       let resultKey = `${name}-${state}-${country}`;
       let obj = { data, name, state, country, lat, lon };
       let stringifiedData = JSON.stringify(obj);
-      localStorage.setItem(resultKey, stringifiedData);
-      checkPreviousLocations(data);
+
+      if(DEBUG){
+        localStorage.setItem(resultKey, stringifiedData);
+        checkPreviousLocations(data);
+      }
+
     } catch (e) {
       getGeoCoordinates("New York");
       console.log(e);
@@ -134,11 +143,11 @@ function App() {
 
       let dt = Date.parse(timeStamp) / 1000;
       let response = await fetch(
-        "/api/getHistoricalData",
+        "http://localhost:3001/api/getHistoricalData",
         {
           method: "POST",
           headers: {
-            // "Access-Control-Allow-Origin": "http://localhost:3001",
+            "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ lat, lon, dt }),
