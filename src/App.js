@@ -11,7 +11,6 @@ import { ChartCard } from "./components/card/chart-card";
 
 let localStorage = window.localStorage;
 
-
 const AppContainer = styled.div`
   background-color: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "#fcfcfc"};
@@ -32,37 +31,42 @@ function App() {
   const [hourlyData, setHourlyData] = useState([]);
   const [previousLocations, setPreviousLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {width} = useWindowDimensions()
-  const getGeoCoordinates = async (e) => {
-    if(e != null || e !== undefined){
-      e.preventDefault()
-    }
-    try{
-      let response = await fetch('http://localhost:3001/api/getGeoCoordinates', {
-      method: 'POST',
-      body: JSON.stringify({cityName}),
-      headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3001',
-        'Content-Type': 'application/json'
-      },
-    })
-    let data = await response.json()
-    
-    if(data){
-      console.log('Data Is True')
-      getWeatherData(data[0])
-      setAllGeoLocations(data)
-    }
-    
+  const { width } = useWindowDimensions();
+  
+  useEffect(() => {
+    getGeoCoordinates()
+  },[])
 
-    } catch (e) {
-      console.log('An error has occured', e)
+
+  const getGeoCoordinates = async (e) => {
+    setIsLoading(true)
+    if (e != null || e !== undefined) {
+      e.preventDefault();
     }
-    
-  }
+    try {
+      let response = await fetch(
+        "/api/getGeoCoordinates",
+        {
+          method: "POST",
+          body: JSON.stringify({ cityName }),
+          headers: {
+           
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      let data = await response.json();
+
+      if (data) {
+        getWeatherData(data[0]);
+        setAllGeoLocations(data);
+      }
+    } catch (e) {
+      console.log("An error has occured", e);
+    }
+  };
 
   const getWeatherData = async (obj) => {
-   
     if (!obj) {
       alert(
         "We couldnt find a city with that name. Please reenter or try something else!"
@@ -70,20 +74,20 @@ function App() {
       return;
     }
     let { lat, lon, name, state, country } = obj;
-   
+
     let key = `${name}-${state}-${country}`;
     let localStorageData = checkLocalStorage(key);
     checkPreviousLocations(localStorageData);
     if (localStorageData) return;
 
     try {
-      console.log("API IS BEING CALLED", lat , lon);
-      let response = await fetch('http://localhost:3001/api/getWeatherData', {
-        method: 'POST',
-        body: JSON.stringify({lat, lon}),
+      console.log("API IS BEING CALLED", lat, lon);
+      let response = await fetch("/api/getWeatherData", {
+        method: "POST",
+        body: JSON.stringify({ lat, lon }),
         headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3001',
-          'Content-Type': 'application/json'
+          // "Access-Control-Allow-Origin": "http://localhost:3001",
+          "Content-Type": "application/json",
         },
       });
       let data = await response.json();
@@ -94,19 +98,12 @@ function App() {
       localStorage.setItem(resultKey, stringifiedData);
       checkPreviousLocations(data);
     } catch (e) {
-      getGeoCoordinates('New York')
+      getGeoCoordinates("New York");
       console.log(e);
-    } 
-  }
-
-
-  useEffect(() => {
-    console.log('Weather Results', weatherResults)
-  }, [weatherResults])
-
+    }
+  };
 
   const checkPreviousLocations = (location) => {
-   
     if (!weatherResults) return;
     let foundLocation = previousLocations.findIndex(
       (weather) => weather.name === weatherResults.name
@@ -120,38 +117,33 @@ function App() {
     if (foundLocation === -1) {
       setPreviousLocations([...previousLocations, weatherResults]);
     }
-    
   };
- 
+
   const getHistoricalData = async (obj) => {
-    console.log('Getting Historical Data....', obj)
     if (!obj) return;
 
     let infoArray = [];
     for (let i = 0; i < 11; i++) {
-      let {
-        lat,
-        lon,
-        data,
-      } = obj;
-    
+      let { lat, lon, data } = obj;
+
       let timeStamp = moment
         .utc(data?.current?.dt, "X")
         .add(data?.timezone_offset, "seconds")
         .subtract(i, "years")
-        .format('YYYY')
-        
+        .format("YYYY");
+
       let dt = Date.parse(timeStamp) / 1000;
-      console.log('DT', dt)
-      let response = await fetch('http://localhost:3001/api/getHistoricalData', {
-        method: 'POST', 
-        headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3001',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({lat, lon, dt})
-      });
-      console.log(response)
+      let response = await fetch(
+        "/api/getHistoricalData",
+        {
+          method: "POST",
+          headers: {
+            // "Access-Control-Allow-Origin": "http://localhost:3001",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ lat, lon, dt }),
+        }
+      );
       let foundData = await response.json();
       infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
     }
@@ -162,10 +154,12 @@ function App() {
         {
           label: "Temperature",
           data: infoArray.map((data) => data.weather.temp),
-          backgroundColor: 'darkBlue', borderColor: 'darkBlue'
+          backgroundColor: "darkBlue",
+          borderColor: "darkBlue",
         },
       ],
     });
+    setIsLoading(false)
   };
 
   const getHourlyData = async (obj) => {
@@ -190,6 +184,7 @@ function App() {
         },
       ],
     });
+
   };
 
   let currentData = weatherResults?.data?.current;
@@ -203,7 +198,6 @@ function App() {
     .utc(currentData?.dt, "X")
     .add(weatherResults?.data?.timezone_offset, "seconds")
     .format("hh:mm a");
-
 
   let sunRise = moment
     .utc(currentData?.sunrise, "X")
@@ -230,8 +224,9 @@ function App() {
       console.log("Day Time");
       setTimeOfDay("day");
     }
-    getHistoricalData(weatherResults)
+    getHistoricalData(weatherResults);
     getHourlyData(weatherResults);
+    
   }, [weatherResults]);
 
   const checkLocalStorage = (key) => {
@@ -256,7 +251,6 @@ function App() {
   `;
 
   return (
-
     <>
       <AppContainer
         backgroundColor="#313335"
@@ -273,8 +267,10 @@ function App() {
         />
       </AppContainer>
       {isLoading ? (
-        <Flex alignItems="center" justifyContent='center'>
-          <div style={{color: 'white', fontSize: '40px', fontWeight: 'bold'}}>Loading...</div>
+        <Flex alignItems="center" justifyContent="center">
+          <div style={{ color: "white", fontSize: "40px", fontWeight: "bold" }}>
+            Loading...
+          </div>
         </Flex>
       ) : (
         <>
