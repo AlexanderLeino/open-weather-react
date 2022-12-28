@@ -53,7 +53,7 @@ function App() {
     }
     try {
       let response = await fetch(
-        "api/getGeoCoordinates",
+        "https://open-weather-react-app.herokuapp.com/api/getGeoCoordinates",
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
@@ -91,7 +91,7 @@ function App() {
     }
 
     try {
-      let response = await fetch("api/getWeatherData", {
+      let response = await fetch("https://open-weather-react-app.herokuapp.com/api/getWeatherData", {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
@@ -147,7 +147,7 @@ function App() {
 
       let dt = Date.parse(timeStamp) / 1000;
       let response = await fetch(
-        "api/getHistoricalData",
+        "https://open-weather-react-app.herokuapp.com/api/getHistoricalData",
         {
           method: "POST",
           headers: {
