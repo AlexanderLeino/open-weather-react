@@ -151,7 +151,7 @@ function App() {
         {
           method: "POST",
           headers: {
-            // "Access-Control-Allow-Origin": "http://localhost:3001",
+            "Access-Control-Allow-Origin": "https://open-weather-react-app.herokuapp.com",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ lat, lon, dt }),
