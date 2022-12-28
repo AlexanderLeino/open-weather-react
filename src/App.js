@@ -8,11 +8,8 @@ import { SevenDayForecast } from "./components/seven-day-forecast/7DayForecast";
 import { Flex } from "./components/flex";
 import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
-import fakeData from "./utils.js/fakeHistoricalData";
 
 let DEBUG = false
-
-
 let localStorage = window.localStorage;
 
 const AppContainer = styled.div`
@@ -38,7 +35,7 @@ function App() {
   const [allGeoLocations, setAllGeoLocations] = useState([]);
   const [weatherResults, setWeatherResults] = useState("");
   const [timeOfday, setTimeOfDay] = useState("");
-  const [historicalData, setHistoricalData] = useState(fakeData);
+  const [historicalData, setHistoricalData] = useState([]);
   const [hourlyData, setHourlyData] = useState([]);
   const [previousLocations, setPreviousLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,12 +53,11 @@ function App() {
     }
     try {
       let response = await fetch(
-        "http://localhost:3001/api/getGeoCoordinates",
+        "api/getGeoCoordinates",
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
         }
@@ -95,11 +91,10 @@ function App() {
     }
 
     try {
-      let response = await fetch("http://localhost:3001/api/getWeatherData", {
+      let response = await fetch("api/getWeatherData", {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:3001",
           "Content-Type": "application/json",
         },
       });
@@ -137,49 +132,49 @@ function App() {
     }
   };
 
-  // const getHistoricalData = async (obj) => {
-  //   if (!obj) return;
+  const getHistoricalData = async (obj) => {
+    if (!obj) return;
 
-  //   let infoArray = [];
-  //   for (let i = 0; i < 11; i++) {
-  //     let { lat, lon, data } = obj;
+    let infoArray = [];
+    for (let i = 0; i < 11; i++) {
+      let { lat, lon, data } = obj;
 
-  //     let timeStamp = moment
-  //       .utc(data?.current?.dt, "X")
-  //       .add(data?.timezone_offset, "seconds")
-  //       .subtract(i, "years")
-  //       .format("YYYY");
+      let timeStamp = moment
+        .utc(data?.current?.dt, "X")
+        .add(data?.timezone_offset, "seconds")
+        .subtract(i, "years")
+        .format("YYYY");
 
-  //     let dt = Date.parse(timeStamp) / 1000;
-  //     let response = await fetch(
-  //       "api/getHistoricalData",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           // "Access-Control-Allow-Origin": "http://localhost:3001",
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ lat, lon, dt }),
-  //       }
-  //     );
-  //     let foundData = await response.json();
-  //     infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
-  //   }
+      let dt = Date.parse(timeStamp) / 1000;
+      let response = await fetch(
+        "api/getHistoricalData",
+        {
+          method: "POST",
+          headers: {
+            // "Access-Control-Allow-Origin": "http://localhost:3001",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ lat, lon, dt }),
+        }
+      );
+      let foundData = await response.json();
+      infoArray.unshift({ timeStamp, weather: foundData?.data[0] });
+    }
 
-  //   setHistoricalData({
-  //     labels: infoArray.map((data) => data.timeStamp),
-  //     datasets: [
-  //       {
-  //         label: "Temperature",
-  //         data: infoArray.map((data) => data.weather.temp),
-  //         backgroundColor: "darkBlue",
-  //         borderColor: "darkBlue",
-  //       },
-  //     ],
-  //   });
-  //   infoArray = []
-  //   setIsLoading(false)
-  // };
+    setHistoricalData({
+      labels: infoArray.map((data) => data.timeStamp),
+      datasets: [
+        {
+          label: "Temperature",
+          data: infoArray.map((data) => data.weather.temp),
+          backgroundColor: "darkBlue",
+          borderColor: "darkBlue",
+        },
+      ],
+    });
+    infoArray = []
+    setIsLoading(false)
+  };
 
   const getHourlyData = async (obj) => {
     let filterData = obj?.data?.hourly?.slice(23);
@@ -243,7 +238,7 @@ function App() {
       console.log("Day Time");
       setTimeOfDay("day");
     }
-    // getHistoricalData(weatherResults);
+    getHistoricalData(weatherResults);
     getHourlyData(weatherResults);
     
   }, [weatherResults]);
