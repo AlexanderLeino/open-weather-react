@@ -26,6 +26,13 @@ const AppContainer = styled.div`
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 `;
 
+const CardContainer = styled(Flex)`
+@media (max-width: 1550px) {
+  margin-top: 15px;
+}
+`;
+
+
 function App() {
   const [cityName, setCityName] = useState("New York");
   const [allGeoLocations, setAllGeoLocations] = useState([]);
@@ -256,11 +263,6 @@ function App() {
     }
   };
 
-  const CardContainer = styled(Flex)`
-    @media (max-width: 1550px) {
-      margin-top: 15px;
-    }
-  `;
 
   return (
     <>
