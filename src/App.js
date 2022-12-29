@@ -122,7 +122,7 @@ function App() {
       getGeoCoordinates("New York");
       console.log(e);
     }
-    setIsLoading(false)
+    
   };
 
   const checkPreviousLocations = (location) => {
