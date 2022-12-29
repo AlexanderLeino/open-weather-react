@@ -52,7 +52,7 @@ export const ChartCard = ({historicalData, hourlyTemp}) => {
 
     >
       {selectedView === "historical" ? (
-        <LineChart chartData={fakeData}/>
+        <LineChart chartData={historicalData}/>
       ) : (
         <LineChart chartData={hourlyTemp}/>
       )}
