@@ -7,6 +7,9 @@ import fakeData from "../../utils.js/fakeHistoricalData";
 import styled from "styled-components";
 
   const ChartCardContainer = styled(Card)`
+   @media(max-width: 1607px){
+    margin-top: 10px;
+  }
   @media(max-width: 768px){
     width: 500px;
   }
@@ -18,9 +21,15 @@ import styled from "styled-components";
   @media(max-width: 412px){
     width: 315px;
   }
-    
-  
   `
+  const ChartButton = styled(Button)`
+  @media(max-width: 431px){
+    font-size: 12px;
+    height: auto;
+
+  }
+  `
+
 export const ChartCard = ({historicalData, hourlyTemp}) => {
 
   const [selectedView, setSelectedView] = useState("hourlyTemp");
@@ -48,12 +57,12 @@ export const ChartCard = ({historicalData, hourlyTemp}) => {
         <LineChart chartData={hourlyTemp}/>
       )}
       <Flex justifyContent="start" alignItems="center" margin={'20px 0px 10px 0px'} flexWrap='nowrap'>
-        <Button hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="hourlyTemp" borderRight='0px'>
+        <ChartButton hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="hourlyTemp" borderRight='0px'>
           Temp (Hourly)
-        </Button>
-        <Button hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="historical">
+        </ChartButton>
+        <ChartButton hoverBackgroundColor='#1e1e5d' onClick={handleOnClick} backgroundColor='white' border='1px solid black' value="historical">
           Historical
-        </Button>
+        </ChartButton>
       </Flex>
     </ChartCardContainer>
   );

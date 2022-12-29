@@ -8,9 +8,18 @@ import { SevenDayForecast } from "./components/seven-day-forecast/7DayForecast";
 import { Flex } from "./components/flex";
 import useWindowDimensions from "./utils.js/getWindowDimensions";
 import { ChartCard } from "./components/card/chart-card";
+import fakeData from "./utils.js/fakeHistoricalData";
+import { Minified7DayForecast } from './components/minified7DayForecast.js'
 
-let DEBUG = false
+let DEBUG = true
+let baseURL
 let localStorage = window.localStorage;
+
+if(DEBUG){
+  baseURL = 'http://localhost:3001'
+} else {
+  baseURL = 'https://open-weather-react-app.herokuapp.com'
+}
 
 const AppContainer = styled.div`
   background-color: ${({ backgroundColor }) =>
@@ -23,12 +32,12 @@ const AppContainer = styled.div`
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 `;
 
-const CardContainer = styled(Flex)`
-@media (max-width: 1550px) {
-  margin-top: 15px;
-}
-`;
-
+const NavContain = styled(AppContainer)`
+  border-radius: 20px;
+  @media (max-width: 431px){
+    border-radius: 0px 0px 20px 20px;
+  }
+`
 
 function App() {
   const [cityName, setCityName] = useState("New York");
@@ -53,7 +62,7 @@ function App() {
     }
     try {
       let response = await fetch(
-        "https://open-weather-react-app.herokuapp.com/api/getGeoCoordinates",
+        `${baseURL}/api/getGeoCoordinates`,
         {
           method: "POST",
           body: JSON.stringify({ cityName }),
@@ -91,7 +100,7 @@ function App() {
     }
 
     try {
-      let response = await fetch("https://open-weather-react-app.herokuapp.com/api/getWeatherData", {
+      let response = await fetch(`${baseURL}/api/getWeatherData`, {
         method: "POST",
         body: JSON.stringify({ lat, lon }),
         headers: {
@@ -133,7 +142,11 @@ function App() {
   };
 
   const getHistoricalData = async (obj) => {
-    if (!obj) return;
+   
+    if (!obj) {
+      setIsLoading(false)
+      
+    }
 
     let infoArray = [];
     for (let i = 0; i < 11; i++) {
@@ -147,11 +160,10 @@ function App() {
 
       let dt = Date.parse(timeStamp) / 1000;
       let response = await fetch(
-        "https://open-weather-react-app.herokuapp.com/api/getHistoricalData",
+        `${baseURL}/api/getHistoricalData`,
         {
           method: "POST",
           headers: {
-            // "Access-Control-Allow-Origin": "http://localhost:3001",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ lat, lon, dt }),
@@ -261,7 +273,7 @@ function App() {
 
   return (
     <>
-      <AppContainer
+      <NavContain
         backgroundColor="#313335"
         border="1px solid white"
         margin={"0px 0px 20px 0px"}
@@ -274,7 +286,7 @@ function App() {
           results={weatherResults}
           allGeoLocations={allGeoLocations}
         />
-      </AppContainer>
+      </NavContain>
       {isLoading ? (
         <Flex alignItems="center" justifyContent="center">
           <div style={{ color: "white", fontSize: "40px", fontWeight: "bold" }}>
@@ -298,23 +310,22 @@ function App() {
               previousLocations={previousLocations}
               setCityName={setCityName}
             />
+           
           </AppContainer>
-          <Flex justifyContent="center">
-            {width <= 619 && (
-              <CardContainer flexGrow={1}>
-                <ChartCard
-                  historicalData={historicalData}
-                  hourlyTemp={hourlyData}
-                />
-              </CardContainer>
-            )}
-          </Flex>
           <AppContainer
             backgroundColor="#313335"
             border="1px solid white"
             margin={"20px 0px 0px 0px"}
           >
+          {
+            width <= 900 
+            ? 
+            <Minified7DayForecast data={weatherResults} timeOfDay={timeOfday} /> 
+            :
             <SevenDayForecast data={weatherResults} timeOfDay={timeOfday} />
+          }
+
+            
           </AppContainer>
         </>
       )}

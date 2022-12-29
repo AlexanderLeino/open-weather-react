@@ -20,7 +20,7 @@ const StyledSelect = styled.select`
   -moz-appearance: none;
   -ms-appearance: none;
   color: ${({ color }) => (color ? color : 'black')};
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : ".85rem")};
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : "20px")};
   font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : null)};
   white-space: nowrap;
  
@@ -32,6 +32,9 @@ const StyledSelect = styled.select`
     &:hover {
       background: ${'Green'};
     }
+  }
+  @media (max-width: 375px){
+    font-size: 18px;
   }
 `;
 

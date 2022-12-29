@@ -18,6 +18,7 @@ module.exports = {
       res.send(response.data).status(200);
     } catch (e) {
         res.send({ error: e }).status(400);
+        console.log(e)
     }
   },
 

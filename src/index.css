@@ -6,9 +6,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
-  padding: 10px 30px 10px 30px
+  padding: 10px 30px 10px 30px;
+  
 }
-
+@media (max-width: 431px){
+  body {
+    padding: 0px;
+  }
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

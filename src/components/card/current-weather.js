@@ -21,9 +21,20 @@ const SecondaryWeatherContainer = styled(Card)`
 `
 
 const DescriptionCard = styled(Flex)`
+   @media(max-width: 559px){
+    align-items: center;
+  }
   @media(max-width: 412px){
     width: 250px;
     align-items: center;
+  }
+`
+const WeatherIconContainer = styled(Flex)`
+
+ @media(max-width: 559px){
+   justify-content: center;
+   width: 100%;
+   margin-bottom: -40px;
   }
 `
 
@@ -81,7 +92,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
         </Flex>
       </Flex>
 
-      <Flex width="100%" style={{ position: 'relative', top: '40px' }}>
+      <Flex width="100%">
         <DescriptionCard
           flexDirection="column"
           alignItems="flex-start"
@@ -126,7 +137,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
           </Flex>
         </DescriptionCard>
         {width >= 412
-          && <Flex>
+          && <WeatherIconContainer>
             <span style={{ fontSize: "75px", color: cardStyling.color }}>
               {WeatherIconSwitch(
                 currentData?.weather[0].description,
@@ -134,7 +145,7 @@ export const CurrentWeatherCard = ({ results, currentData, timeOfday }) => {
                 false
               )}
             </span>
-          </Flex>}
+          </WeatherIconContainer>}
 
       </Flex>
     </SecondaryWeatherContainer>

@@ -6,9 +6,6 @@ import Select from "../select";
 import { SecondaryWeatherCard } from "../card/secondary-weather";
 import { CurrentWeatherCard } from "../card/current-weather";
 import { ChartCard } from "../card/chart-card";
-import useWindowDimensions from "../../utils.js/getWindowDimensions";
-
-
 
 const SelectStyled = styled(Select)`
   font-size: 25px;
@@ -38,6 +35,15 @@ const SecondaryCard = styled(Flex)`
 
 `
 
+const FullDate = styled.div`
+  font-size: 20px;
+  color: white;
+  @media(max-width: 375px){
+    font-size: 18px;
+  }
+
+`
+
 export const CurrentWeatherContainer = ({
   data,
   sunRise,
@@ -49,7 +55,6 @@ export const CurrentWeatherContainer = ({
   hourlyTemp,
   fullDate,
 }) => {
-  let { width } = useWindowDimensions()
   const handleSelectChange = (e) => {
     let foundLocation = allGeoLocations[e.target.value];
     getWeatherData(foundLocation);
@@ -96,7 +101,7 @@ export const CurrentWeatherContainer = ({
                 </SelectStyled>
               )}
             </Flex>
-            <div style={{ fontSize: '20px', color: 'white' }}>{fullDate}</div>
+            <FullDate>{fullDate}</FullDate>
           </Flex>
         </Card>
         <Flex justifyContent='space-around' flexWrap='wrap' width='100%' margin='10px 0px 0px 0px'>
@@ -115,8 +120,7 @@ export const CurrentWeatherContainer = ({
               results={data}
             />
           </SecondaryCard>
-          
-            <ChartCard historicalData={historicalData} hourlyTemp={hourlyTemp} />
+            <ChartCard historicalData={historicalData} hourlyTemp={hourlyTemp} /> 
         </Flex>
       </Flex>
 

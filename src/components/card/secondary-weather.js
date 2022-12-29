@@ -27,7 +27,7 @@ const Tile = styled.div`
 `;
 
 const TitleText = styled.div`
-  font-size: 30px;
+  font-size: 25px;
   color: black;
 `;
 

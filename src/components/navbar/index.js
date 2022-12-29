@@ -7,8 +7,9 @@ import {VscSearch} from 'react-icons/vsc'
 
 const NavBarContainer = styled(Flex)`
   background-color: #313335;
-  @media(max-width: 629px){
-    height: 100px;
+ 
+  @media(max-width: 641px){
+    height: auto;
     justify-content: center;
   }
 `
@@ -16,7 +17,7 @@ const Title = styled.div`
   font-weight: bold;
   font-size: 30px;
   color: white;
-  @media(max-width: 360px){
+  @media(max-width: 373px){
     font-size: 28px;
   }
 
@@ -39,7 +40,7 @@ const Title = styled.div`
 export const NavBar = ({setCityName, getGeoCoordinates}) => {
   return (
       <>
-     <NavBarContainer className='navBar' alignItems='center' justifyContent='space-between'  height='60px'>
+     <NavBarContainer alignItems='center' justifyContent='space-between'  height='60px'>
         <Title>Weather Dashboard</Title>
         <form onSubmit={getGeoCoordinates} style={{padding: '0px', margin:'0px', height: '50px'}}>
           <Input 
