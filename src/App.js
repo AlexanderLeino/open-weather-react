@@ -11,7 +11,7 @@ import { ChartCard } from "./components/card/chart-card";
 import fakeData from "./utils.js/fakeHistoricalData";
 import { Minified7DayForecast } from './components/minified7DayForecast.js'
 
-let DEBUG = true
+let DEBUG = false
 let baseURL
 let localStorage = window.localStorage;
 
