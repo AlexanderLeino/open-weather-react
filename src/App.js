@@ -11,7 +11,7 @@ import { ChartCard } from "./components/card/chart-card";
 import fakeData from "./utils.js/fakeHistoricalData";
 import { Minified7DayForecast } from './components/minified7DayForecast.js'
 
-let DEBUG = false
+let DEBUG = true
 let baseURL
 let localStorage = window.localStorage;
 
@@ -52,6 +52,7 @@ function App() {
   
   useEffect(() => {
     getGeoCoordinates()
+    setIsLoading(true)
   },[])
 
 

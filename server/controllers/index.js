@@ -3,6 +3,7 @@ require("dotenv").config();
 
 module.exports = {
   getGeoCoordinates: async (req, res) => {
+    console.log("City Name", req.body.cityName, process.env.APIKey)
     try {
       const options = {
         method: "GET",
@@ -18,7 +19,8 @@ module.exports = {
       res.send(response.data).status(200);
     } catch (e) {
         res.send({ error: e }).status(400);
-        console.log(e)
+        console.log("ERROR", e)
+        
     }
   },
 
@@ -44,6 +46,7 @@ module.exports = {
     }
   },
   getHistoricalData: async (req, res) => {
+ 
     try {
       const options = {
         method: "GET",
@@ -57,10 +60,11 @@ module.exports = {
         },
       };
       let response = await axios.request(options);
-
+      
       res.send(response.data).status(200);
     } catch (e) {
       res.send({ e }).status(400);
+      console.log(e)
     }
   },
 };

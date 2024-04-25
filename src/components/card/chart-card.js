@@ -31,6 +31,7 @@ import styled from "styled-components";
   `
 
 export const ChartCard = ({historicalData, hourlyTemp}) => {
+  
 
   const [selectedView, setSelectedView] = useState("hourlyTemp");
   const handleOnClick = (e) => {

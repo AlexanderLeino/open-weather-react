@@ -13,7 +13,6 @@ import UVIndex from '../asset/weather-icons-master/production/fill/all/uv-index.
 
 const getUVIndex = (value) => {
     let floorValue = Math.floor(value)
-    console.log('FloorValue', floorValue)
     switch (floorValue) {
         case 1:
             return <img src={UVIndex1} alt='A sun with a the number 1 indicating the scale of the UV Index' height='45px' />
