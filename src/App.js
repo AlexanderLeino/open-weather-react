@@ -11,14 +11,14 @@ import { ChartCard } from "./components/card/chart-card";
 import fakeData from "./utils.js/fakeHistoricalData";
 import { Minified7DayForecast } from './components/minified7DayForecast.js'
 
-let DEBUG = true
+let DEBUG = false
 let baseURL
 let localStorage = window.localStorage;
 
 if(DEBUG){
   baseURL = 'http://localhost:3001'
 } else {
-  baseURL = 'https://open-weather-react-app.herokuapp.com'
+  baseURL = 'https://react-weather-f6d8908d2e80.herokuapp.com/'
 }
 
 const AppContainer = styled.div`
